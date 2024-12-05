@@ -1,0 +1,21 @@
+classDiagram
+    class Product {
+        -name : String
+        -price : Float
+        -url : String
+        -rating : Float
+        -reviews : String[]
+
+        +getName() : String
+        +setName(name : String)
+        +getPrice() : Float
+        +setPrice(price : Float)
+        +getUrl() : String
+        +setUrl(url : String)
+        +getRating() : Float
+        +setRating(rating : Float)
+        +getReviews() : String[]
+        +setReviews(reviews : String[])
+        +addReview(review : String)
+        +removeReview(index : Integer)
+    }

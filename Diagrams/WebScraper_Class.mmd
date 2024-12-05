@@ -1,0 +1,14 @@
+classDiagram
+    class WebScraper {
+        -productWebsites : List[String]
+        -userAgents : List[String]
+        -maxResults : Integer
+
+        +searchProduct(productName : String, category : String) : List[Dict[String, Any]]
+        +scrapeSingleSite(url : String, productName : String) : List[Dict[String, Any]]
+        +parseProductPage(rawHtml : String) : Dict[String, Any]
+        +getProductDetails(productUrl : String) : Dict[String, Any]
+        +validateData(productData : Dict[String, Any]) : Boolean
+        +rotateUserAgent()
+        +canScrapeWebsite(url : String) : Boolean
+    }
