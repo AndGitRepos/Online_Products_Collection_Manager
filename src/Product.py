@@ -52,10 +52,6 @@ class Product:
             r'([\/\w \.-]*)*\/?$'  # path
         )
         
-        # Add http:// prefix if not present
-        if not url.startswith(('http://', 'https://')):
-            url = 'https://' + url
-        
         # Validate URL format
         if not url_pattern.match(url):
             raise ValueError("Invalid URL format")

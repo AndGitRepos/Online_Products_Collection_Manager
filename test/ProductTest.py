@@ -2,104 +2,101 @@ import unittest
 from src.Product import Product
 
 class ProductTest(unittest.TestCase):
+    def setUp(self):
+        # This will run before each test method
+        self.product = Product("TestName", 100.0, "https://www.test.co.uk/", 4.5, [])
+
     # Name Tests
     def testSettingValidName(self):
-        product = Product()
-        product.name = "iPhone"
-        self.assertEqual(product.name, "iPhone")
+        self.product.name = "iPhone"
+        self.assertEqual(self.product.name, "iPhone")
     
     def testSettingInvalidNameType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.set_name, 25)
+        with self.assertRaises(TypeError):
+            self.product.name = 25
     
     def testSettingEmptyName(self):
-        product = Product()
-        self.assertRaises(ValueError, product.set_name, "")
+        with self.assertRaises(ValueError):
+            self.product.name = ""
 
     # Price Tests
     def testSettingValidPrice(self):
-        product = Product()
-        product.price = 1000
-        self.assertEqual(product.price, 1000)
+        self.product.price = 1000.0
+        self.assertEqual(self.product.price, 1000.0)
     
     def testSettingInvalidPriceType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.set_price, "1000")
+        with self.assertRaises(TypeError):
+            self.product.price = "1000"
     
     def testSettingInvalidPriceValue(self):
-        product = Product()
-        self.assertRaises(ValueError, product.set_price, -1000)
+        with self.assertRaises(ValueError):
+            self.product.price = -1000.0
 
     # Url Tests
     def testSettingValidUrl(self):
-        product = Product()
-        product.url = "https://www.amazon.co.uk/"
-        self.assertEqual(product.url, "https://www.amazon.co.uk/")
+        self.product.url = "https://www.amazon.co.uk/"
+        self.assertEqual(self.product.url, "https://www.amazon.co.uk/")
     
     def testSettingInvalidUrlType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.set_url, 25)
+        with self.assertRaises(TypeError):
+            self.product.url = 25
     
     def testSettingEmptyUrl(self):
-        product = Product()
-        self.assertRaises(ValueError, product.set_url, "")
+        with self.assertRaises(ValueError):
+            self.product.url = ""
     
     def testSettingInvalidUrl(self):
-        product = Product()
-        self.assertRaises(ValueError, product.set_url, "amazon.co.uk")
+        with self.assertRaises(ValueError):
+            self.product.url = "amazon"
     
     # Rating Tests
     def testSettingValidRating(self):
-        product = Product()
-        product.rating = 5
-        self.assertEqual(product.rating, 5)
+        self.product.rating = 5.0
+        self.assertEqual(self.product.rating, 5.0)
     
     def testSettingInvalidRatingType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.set_rating, "5")
+        with self.assertRaises(TypeError):
+            self.product.rating = "5"
     
     def testSettingInvalidRatingValue(self):
-        product = Product()
-        self.assertRaises(ValueError, product.set_rating, 6)
+        with self.assertRaises(ValueError):
+            self.product.rating = 6.0
     
     # Reviews Tests
     def testSettingValidReviews(self):
-        product = Product()
-        product.reviews = ["review1", "review2"]
-        self.assertEqual(product.reviews, ["review1", "review2"])
+        self.product.reviews = ["review1", "review2"]
+        self.assertEqual(self.product.reviews, ["review1", "review2"])
     
     def testSettingInvalidReviewsType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.set_reviews, "review1")
+        with self.assertRaises(TypeError):
+            self.product.reviews = "review1"
     
     # Adding Review Tests
     def testAddingValidReview(self):
-        product = Product()
-        product.add_review("review1")
-        self.assertEqual(product.reviews, ["review1"])
+        self.product.addReview("review1")
+        self.assertEqual(self.product.reviews, ["review1"])
     
     def testAddingInvalidReviewType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.add_review, 25)
+        with self.assertRaises(TypeError):
+            self.product.addReview(25)
     
     def testAddingEmptyReview(self):
-        product = Product()
-        self.assertRaises(ValueError, product.add_review, "")
+        with self.assertRaises(ValueError):
+            self.product.addReview("")
     
     # Removing Review Tests
     def testRemovingValidReview(self):
-        product = Product()
-        product.add_review("review1")
-        product.remove_review("review1")
-        self.assertEqual(product.reviews, [])
+        self.product.addReview("review1")
+        self.product.removeReview("review1")
+        self.assertEqual(self.product.reviews, [])
     
     def testRemovingInvalidReviewType(self):
-        product = Product()
-        self.assertRaises(TypeError, product.remove_review, 25)
+        with self.assertRaises(TypeError):
+            self.product.removeReview(25)
     
     def testRemovingEmptyReview(self):
-        product = Product()
-        self.assertRaises(ValueError, product.remove_review, "")
+        with self.assertRaises(ValueError):
+            self.product.removeReview("")
 
 if __name__ == '__main__':
     unittest.main()
