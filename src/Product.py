@@ -1,4 +1,6 @@
 from typing import List
+import regex as re
+from urllib.parse import urlparse
 
 class Product:
     def __init__(self, name : str, price : float, url : str, rating : float, reviews : List[str]) -> None:
@@ -36,13 +38,37 @@ class Product:
     def url(self) -> str:
         return self._url
     @url.setter
-    def url(self, url : str) -> None:
+    def url(self, url: str) -> None:
         if not isinstance(url, str):
             raise TypeError("URL must be a string")
         elif len(url) == 0:
             raise ValueError("URL cannot be empty")
-        else:
-            self._url = url
+        
+        # URL pattern for validation
+        url_pattern = re.compile(
+            r'^(https?:\/\/)'  # http:// or https://
+            r'([\da-z\.-]+)'   # domain name
+            r'\.([a-z\.]{2,6})'  # dot + top level domain
+            r'([\/\w \.-]*)*\/?$'  # path
+        )
+        
+        # Add http:// prefix if not present
+        if not url.startswith(('http://', 'https://')):
+            url = 'https://' + url
+        
+        # Validate URL format
+        if not url_pattern.match(url):
+            raise ValueError("Invalid URL format")
+        
+        # Additional validation using urlparse
+        try:
+            result = urlparse(url)
+            if not all([result.scheme, result.netloc]):
+                raise ValueError("Invalid URL")
+        except Exception:
+            raise ValueError("Invalid URL")
+        
+        self._url = url
     
     @property
     def rating(self) -> float:
