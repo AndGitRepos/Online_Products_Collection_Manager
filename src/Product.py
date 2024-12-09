@@ -2,11 +2,11 @@ from typing import List
 
 class Product:
     def __init__(self, name : str, price : float, url : str, rating : float, reviews : List[str]) -> None:
-        self.name = name
-        self.price = price
-        self.url = url
-        self.rating = rating
-        self.reviews = reviews
+        self._name = name
+        self._price = price
+        self._url = url
+        self._rating = rating
+        self._reviews = reviews
 
     @property
     def name(self) -> str:
@@ -83,4 +83,4 @@ class Product:
             self._reviews.remove(review)
 
     def __str__(self) -> str:
-        return f"Name: {self.name}\nPrice: {self.price}\nURL: {self.url}\nRating: {self.rating}\nReviews: {self.reviews}"   
+        return f"Name: {self._name}\nPrice: {self._price}\nURL: {self._url}\nRating: {self._rating}\nReviews: {self._reviews}"   
