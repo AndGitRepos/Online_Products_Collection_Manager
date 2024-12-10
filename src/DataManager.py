@@ -1,6 +1,5 @@
-from Collection import Collection
-from typing import List, Dict
-from typing import Any
+from src.Collection import Collection
+from typing import List, Dict, Any
 
 # Might be best as a static class
 # Each List[Dict[str, Any]] is a collection

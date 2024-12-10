@@ -1,5 +1,5 @@
 from typing import List
-import regex as re
+import re
 from urllib.parse import urlparse
 
 class Product:

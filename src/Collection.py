@@ -1,4 +1,4 @@
-from Product import Product
+from src.Product import Product
 from typing import List
 
 class Collection:
