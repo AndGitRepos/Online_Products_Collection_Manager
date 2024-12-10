@@ -1,0 +1,11 @@
+classDiagram
+    class DataManager {
+        -data : List[Dict[String, Any]]
+
+        +loadFromCsv(filename : String)
+        +saveToCsv(filename : String)
+        +loadFromJson(filename : String)
+        +saveToJson(filename : String)
+        +convertDictionaryToCollection(dictionary : List[Dict[String, Any]]) Collection
+        +convertCollectionToDictionary(collection : Collection) List[Dict[String, Any]]
+    }
