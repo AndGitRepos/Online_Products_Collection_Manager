@@ -1,0 +1,11 @@
+classDiagram
+    class WebScraper {
+        -PRODUCT_WEBSITES : List[String]
+        -USER_AGENTS : List[String]
+        -MAX_RESULTS : Integer
+
+        +searchForProducts(productName : String) List[Dict[String, Any]]
+        +parseProductPage(productUrl : String) Dict[String, Any]
+        +extractProductData(rawHtml : String) Dict[String, Any]
+        +validateData(productData : Dict[String, Any]) Boolean
+    }
