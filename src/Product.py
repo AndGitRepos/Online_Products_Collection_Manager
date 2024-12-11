@@ -4,11 +4,11 @@ from urllib.parse import urlparse
 
 class Product:
     def __init__(self, name : str, price : float, url : str, rating : float, reviews : List[str]) -> None:
-        self._name = name
-        self._price = price
-        self._url = url
-        self._rating = rating
-        self._reviews = reviews
+        self._name : str = name
+        self._price : float = price
+        self._url : str = url
+        self._rating : float = rating
+        self._reviews : List[str] = reviews
 
     @property
     def name(self) -> str:

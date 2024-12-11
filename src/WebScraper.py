@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+from src.Product import Product
 
 
 class WebScraper:
@@ -7,18 +8,18 @@ class WebScraper:
     MAX_RESULTS : int = 100
 
     def __init__(self):
-        raise TypeError("This class cannot be instantiated")
+        raise TypeError("This is a utility class and cannot be instantiated")
     
     @staticmethod
     def searchForProducts(productName : str) -> List[Dict[str, Any]]:
         pass
 
     @staticmethod
-    def parseProductPage(productUrl : str) -> Dict[str, Any]:
+    def parseProductPage(productUrl : str) -> Product:
         pass
 
     @staticmethod
-    def extractProductData(rawHtml : str) -> Dict[str, Any]:
+    def extractProductData(rawHtml : str) -> Product:
         pass
 
     @staticmethod
