@@ -1,1 +1,0 @@
-{"name": "test", "products": [{"productID": "productID", "name": "productName", "price": 10.0, "url": "https://www.test.co.uk/", "rating": 3.5, "description": "description", "reviews": ["review1", "review2"]}]}

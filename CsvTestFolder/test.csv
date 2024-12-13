@@ -1,2 +1,0 @@
-productID,name,price,url,rating,description,reviews
-productID,productName,10.0,https://www.test.co.uk/,3.5,description,"['review1', 'review2']"
