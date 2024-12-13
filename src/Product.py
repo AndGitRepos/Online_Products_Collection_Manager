@@ -105,4 +105,9 @@ class Product:
             self._reviews.remove(review)
 
     def __str__(self) -> str:
-        return f"Name: {self._name}\nPrice: {self._price}\nURL: {self._url}\nRating: {self._rating}\nReviews: {self._reviews}"   
+        return f"Name: {self._name}\nPrice: {self._price}\nURL: {self._url}\nRating: {self._rating}\nReviews: {self._reviews}"  
+    
+    def __eq__(self, other : object) -> bool:
+        if not isinstance(other, Product):
+            return False
+        return self.name == other.name and self.price == other.price and self.url == other.url and self.rating == other.rating and self.reviews == other.reviews

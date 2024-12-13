@@ -43,3 +43,8 @@ class Collection:
             raise ValueError("Product not in collection")
         else:
             self._products.remove(product)
+    
+    def __eq__(self, other : object) -> bool:
+        if not isinstance(other, Collection):
+            return False
+        return self.name == other.name and self.products == other.products

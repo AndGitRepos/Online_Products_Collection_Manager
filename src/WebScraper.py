@@ -3,7 +3,7 @@ from src.Product import Product
 
 
 class WebScraper:
-    PRODUCT_WEBSITES : List[str] = ["amazon.co.uk"]
+    PRODUCT_WEBSITES : List[str] = ["https://www.argos.co.uk/search/"]
     USER_AGENTS : List[str] = ["Mozilla/5.0"]
     MAX_RESULTS : int = 100
 

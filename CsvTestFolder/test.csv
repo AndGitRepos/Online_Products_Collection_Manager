@@ -1,0 +1,2 @@
+name,price,url,rating,reviews
+productName,10.0,https://www.test.co.uk/,3.5,"['review1', 'review2']"

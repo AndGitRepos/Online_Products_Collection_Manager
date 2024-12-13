@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 import json
 import csv
 import os
+import ast
 
 # Might be best as a static class
 # Each Dict[str, Any] is a collection
@@ -17,10 +18,10 @@ class DataManager:
     def loadCollectionsFromCsvFolder(csvFolderName : str) -> List[Collection]:
         if not isinstance(csvFolderName, str):
             raise TypeError("Filename must be a string")
-        elif not csvFolderName.exists():
+        elif not os.path.exists(csvFolderName):
             raise FileNotFoundError("Folder not found")
 
-        collections = []
+        collections : List[Collection] = []
         for path, folders, files in os.walk(csvFolderName):
             for file in files:
                 if file.endswith(".csv"):
@@ -29,7 +30,13 @@ class DataManager:
                         next(reader)
                         products = []
                         for row in reader:
-                            products.append(Product(row[0], float(row[1]), row[2], float(row[3]), row[4]))
+                            if len(row) != 5:
+                                raise ValueError("Invalid row in csv file")
+                            elif not isinstance(row[0], str):
+                                raise TypeError("Name must be a string")
+                            elif not isinstance(row[4], str):
+                                raise TypeError("Reviews must be a string")
+                            products.append(Product(row[0], float(row[1]), row[2], float(row[3]), ast.literal_eval(row[4])))
                         collections.append(Collection(file[:-4], products))
         return collections
 
@@ -47,12 +54,12 @@ class DataManager:
         elif not all(isinstance(collection, Collection) for collection in collections):
             raise TypeError("All collections must be a Collection")
         
-        if not csvFolderName.exists():
-            csvFolderName.mkdir()
+        if not os.path.exists(csvFolderName):
+            os.mkdir(csvFolderName)
         
         # Iterate through collection, creating a csv for each one
         for collection in collections:
-            with open(os.path.join(csvFolderName, collection.name + "_Collection.csv"), "w") as file:
+            with open(os.path.join(csvFolderName, collection.name + ".csv"), "w") as file:
                 writer = csv.writer(file)
                 writer.writerow(["name", "price", "url", "rating", "reviews"])
                 for product in collection.products:
@@ -65,24 +72,25 @@ class DataManager:
             raise TypeError("Filename must be a string")
         elif not filePath.endswith(".json"):
             raise ValueError("Filename must end with .json")
-        elif not filePath.exists():
+        elif not os.path.exists(filePath):
             raise FileNotFoundError("File not found")
         
         with open(filePath, "r") as file:
             collectionDict = json.load(file)
+            
         return DataManager.convertDicitonaryToCollection(collectionDict)
     
     @staticmethod
-    def saveCollectionToJson(directoryPath : str, collection : Collection):
+    def saveCollectionToJson(directoryPath : str, collection : Collection) -> None:
         if not isinstance(directoryPath, str):
             raise TypeError("Directory path must be a string")
         elif not isinstance(collection, Collection):
             raise TypeError("Collection must be a Collection")
-        elif not directoryPath.exists():
-            raise FileNotFoundError("Directory not found")
+        elif not os.path.exists(directoryPath):
+            os.mkdir(directoryPath)
         
         collectionDict = DataManager.convertCollectionToDictionary(collection)
-        with open(os.path.join(directoryPath, collection.name + "_Collection.json"), "w") as file:
+        with open(os.path.join(directoryPath, collection.name + ".json"), "w") as file:
             json.dump(collectionDict, file)
 
     """
@@ -117,6 +125,7 @@ class DataManager:
             if not isinstance(product, dict):
                 raise TypeError("Product must be a dictionary")
             collection.addProduct(Product(product["name"], product["price"], product["url"], product["rating"], product["reviews"]))
+        return collection
     
     @staticmethod
     def convertCollectionToDictionary(collection : Collection) -> Dict[str, Any]:
