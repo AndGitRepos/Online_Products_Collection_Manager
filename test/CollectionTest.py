@@ -4,7 +4,8 @@ from src.Product import Product
 
 class CollectionTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.testProduct : Product = Product("TestName", 100.0, "https://www.test.co.uk/", 4.5, [])
+        self.testProduct : Product = Product("ProductID", "TestName", 100.0, "https://www.test.co.uk/", 4.5, "Description", [])
+        self.newProduct : Product = Product("ProductID", "TestName", 100.0, "https://www.amazon.co.uk/", 4.5, "Description", [])
         self.collection : Collection = Collection("TestName", [self.testProduct])
 
     # Name Tests
@@ -22,9 +23,8 @@ class CollectionTest(unittest.TestCase):
     
     # Products Tests
     def testSettingValidProducts(self) -> None:
-        newProducts = [Product("TestName", 100.0, "https://www.amazon.co.uk/", 4.5, [])]
-        self.collection.products = newProducts
-        self.assertEqual(self.collection.products, newProducts)
+        self.collection.products = [self.newProduct]
+        self.assertEqual(self.collection.products, [self.newProduct])
     
     def testSettingInvalidProductsType(self) -> None:
         with self.assertRaises(TypeError):
@@ -32,9 +32,8 @@ class CollectionTest(unittest.TestCase):
     
     # Adding Products Tests
     def testAddingValidProduct(self) -> None:
-        newProduct = Product("TestName", 100.0, "https://www.amazon.co.uk/", 4.5, [])
-        self.collection.addProduct(newProduct)
-        self.assertEqual(self.collection.products, [self.testProduct, newProduct])
+        self.collection.addProduct(self.newProduct)
+        self.assertEqual(self.collection.products, [self.testProduct, self.newProduct])
     
     def testAddingInvalidProductType(self) -> None:
         with self.assertRaises(TypeError):
@@ -50,9 +49,8 @@ class CollectionTest(unittest.TestCase):
             self.collection.removeProduct("Not a product")
     
     def testRemovingProductNotInCollection(self) -> None:
-        newProduct = Product("TestName", 100.0, "https://www.amazon.co.uk/", 4.5, [])
         with self.assertRaises(ValueError):
-            self.collection.removeProduct(newProduct)
+            self.collection.removeProduct(self.newProduct)
     
 
 if __name__ == '__main__':

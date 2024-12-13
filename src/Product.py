@@ -3,12 +3,26 @@ import re
 from urllib.parse import urlparse
 
 class Product:
-    def __init__(self, name : str, price : float, url : str, rating : float, reviews : List[str]) -> None:
+    def __init__(self, productID : str, name : str, price : float, url : str, rating : float, description : str, reviews : List[str]) -> None:
+        self._productID : str = productID
         self._name : str = name
         self._price : float = price
         self._url : str = url
         self._rating : float = rating
+        self._description : str = description
         self._reviews : List[str] = reviews
+        
+    @property
+    def productID(self) -> str:
+        return self._productID
+    @productID.setter
+    def productID(self, productID : int) -> None:
+        if not isinstance(productID, str):
+            raise TypeError("Product ID must be a string")
+        elif len(productID) == 0:
+            raise ValueError("Product ID cannot be empty")
+        else:
+            self._productID = productID
 
     @property
     def name(self) -> str:
@@ -79,6 +93,16 @@ class Product:
             self._rating = rating
     
     @property
+    def description(self) -> str:
+        return self._description
+    @description.setter
+    def description(self, description : str) -> None:
+        if not isinstance(description, str):
+            raise TypeError("Description must be a string")
+        else:
+            self._description = description
+    
+    @property
     def reviews(self) -> List[str]:
         return self._reviews
     @reviews.setter
@@ -105,9 +129,21 @@ class Product:
             self._reviews.remove(review)
 
     def __str__(self) -> str:
-        return f"Name: {self._name}\nPrice: {self._price}\nURL: {self._url}\nRating: {self._rating}\nReviews: {self._reviews}"  
+        return f"""Product ID: {self.productID}
+    Name: {self.name}
+    Price: {self.price}
+    URL: {self.url}
+    Rating: {self.rating}
+    Description: {self.description}
+    Reviews: {self.reviews}"""
     
     def __eq__(self, other : object) -> bool:
         if not isinstance(other, Product):
             return False
-        return self.name == other.name and self.price == other.price and self.url == other.url and self.rating == other.rating and self.reviews == other.reviews
+        return (self.productID == other.productID 
+                and self.name == other.name 
+                and self.price == other.price 
+                and self.url == other.url 
+                and self.rating == other.rating 
+                and self.description == other.description 
+                and self.reviews == other.reviews)

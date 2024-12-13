@@ -1,2 +1,2 @@
-name,price,url,rating,reviews
-productName,10.0,https://www.test.co.uk/,3.5,"['review1', 'review2']"
+productID,name,price,url,rating,description,reviews
+productID,productName,10.0,https://www.test.co.uk/,3.5,description,"['review1', 'review2']"

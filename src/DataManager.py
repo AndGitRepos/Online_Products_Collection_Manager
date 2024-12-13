@@ -30,13 +30,25 @@ class DataManager:
                         next(reader)
                         products = []
                         for row in reader:
-                            if len(row) != 5:
-                                raise ValueError("Invalid row in csv file")
-                            elif not isinstance(row[0], str):
-                                raise TypeError("Name must be a string")
-                            elif not isinstance(row[4], str):
-                                raise TypeError("Reviews must be a string")
-                            products.append(Product(row[0], float(row[1]), row[2], float(row[3]), ast.literal_eval(row[4])))
+                            # Reading all of the products data
+                            productID = row[0]
+                            name = row[1]
+                            price = float(row[2])
+                            url = row[3]
+                            rating = float(row[4])
+                            description = row[5]
+                            reviews = ast.literal_eval(row[6])
+                            # Instantiating the product using the data from the file
+                            products.append(Product(
+                                productID=productID,
+                                name=name,
+                                price=price,
+                                url=url,
+                                rating=rating,
+                                description=description,
+                                reviews=reviews
+                            ))
+                        # Creating a collection by passing in the collection name and its products
                         collections.append(Collection(file[:-4], products))
         return collections
 
@@ -57,13 +69,22 @@ class DataManager:
         if not os.path.exists(csvFolderName):
             os.mkdir(csvFolderName)
         
-        # Iterate through collection, creating a csv for each one
+        # Iterate through each collection, creating a csv for each one
         for collection in collections:
             with open(os.path.join(csvFolderName, collection.name + ".csv"), "w") as file:
                 writer = csv.writer(file)
-                writer.writerow(["name", "price", "url", "rating", "reviews"])
+                # Writing the csv header with each columns name
+                writer.writerow(["productID", "name", "price", "url", "rating", "description", "reviews"])
                 for product in collection.products:
-                    writer.writerow([product.name, product.price, product.url, product.rating, product.reviews])
+                    writer.writerow([
+                        product.productID,
+                        product.name,
+                        product.price,
+                        product.url,
+                        product.rating,
+                        product.description,
+                        product.reviews])
+
         
 
     @staticmethod
@@ -99,10 +120,12 @@ class DataManager:
         "name": "Collection Name",
         "products": [
             {
+                "productID": "123",
                 "name": "Product Name",
                 "price": 100.0,
                 "url": "https://www.example.co.uk/",
                 "rating": 4.5,
+                "description": "Product Description",
                 "reviews": ["Review 1", "Review 2"]
             },
             ...
@@ -110,7 +133,7 @@ class DataManager:
     }
     """
     @staticmethod
-    def convertDicitonaryToCollection(dictionary : Dict[str, Any]) -> Collection:
+    def convertDicitonaryToCollection(dictionary: Dict[str, Any]) -> Collection:
         if not isinstance(dictionary, dict):
             raise TypeError("Dictionary must be a dictionary")
         elif "name" not in dictionary:
@@ -120,28 +143,44 @@ class DataManager:
         elif not isinstance(dictionary["products"], list):
             raise TypeError("Products must be a list")
 
-        collection : Collection = Collection(dictionary["name"], [])
-        for product in dictionary["products"]:
-            if not isinstance(product, dict):
+        collection: Collection = Collection(dictionary["name"], [])
+        for product_dict in dictionary["products"]:
+            if not isinstance(product_dict, dict):
                 raise TypeError("Product must be a dictionary")
-            collection.addProduct(Product(product["name"], product["price"], product["url"], product["rating"], product["reviews"]))
+            
+            # Extract product data with proper type conversion
+            product = Product(
+                productID=product_dict["productID"],
+                name=product_dict["name"],
+                price=float(product_dict["price"]),
+                url=product_dict["url"],
+                rating=float(product_dict["rating"]),
+                description=product_dict["description"],
+                reviews=product_dict["reviews"]
+            )
+            collection.addProduct(product)
         return collection
     
     @staticmethod
-    def convertCollectionToDictionary(collection : Collection) -> Dict[str, Any]:
+    def convertCollectionToDictionary(collection: Collection) -> Dict[str, Any]:
         if not isinstance(collection, Collection):
             raise TypeError("Collection must be a Collection")
 
-        dictionary : Dict[str, Any] = {
+        dictionary: Dict[str, Any] = {
             "name": collection.name,
             "products": []
         }
+        
         for product in collection.products:
-            dictionary["products"].append({
+            product_dict = {
+                "productID": product.productID,
                 "name": product.name,
                 "price": product.price,
                 "url": product.url,
                 "rating": product.rating,
+                "description": product.description,
                 "reviews": product.reviews
-            })
+            }
+            dictionary["products"].append(product_dict)
+        
         return dictionary

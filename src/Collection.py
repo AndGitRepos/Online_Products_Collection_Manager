@@ -44,6 +44,9 @@ class Collection:
         else:
             self._products.remove(product)
     
+    def __str__(self) -> str:
+        return f"Collection: {self.name}\nProducts: {self.products}"
+    
     def __eq__(self, other : object) -> bool:
         if not isinstance(other, Collection):
             return False
