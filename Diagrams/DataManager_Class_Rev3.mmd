@@ -1,0 +1,9 @@
+classDiagram
+    class DataManager {
+        +loadCollectionsFromCsvFolder(csvFolderName : String) List[Collection]
+        +saveCollectionsToCsvFolder(csvFolderName : String, collections : List[Collection])
+        +loadCollectionFromJson(filePath : String) Collection
+        +saveCollectionToJson(directoryPath : String, collection : Collection)
+        +convertDictionaryToCollection(dictionary : Dict[String, Any]) Collection
+        +convertCollectionToDictionary(collection : Collection) Dict[String, Any]
+    }
