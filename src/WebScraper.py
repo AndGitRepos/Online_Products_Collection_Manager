@@ -27,7 +27,7 @@ class WebScraper:
         numOfPages : int = searchResultsData["redux"]["product"]["meta"]["totalPages"]
         # TODO - currently capped at maximum 10 pages
         for page in range(1, min(5, numOfPages + 1)):
-            time.sleep(0.2)
+            time.sleep(0.1)
             searchURL = f"https://www.argos.co.uk/search/{productName}/opt/page:{page}/"
             currPageSearchResultsData = WebScraper.extractSearchResultsJSON(searchURL)
             if not currPageSearchResultsData:
@@ -40,7 +40,7 @@ class WebScraper:
         
         extractedProductData : List[Product] = []
         for productUrl in productPageUrls:
-            time.sleep(0.15)
+            time.sleep(0.1)
             productData : Product = WebScraper.parseProductPage(productUrl)
             if not productData:
                 print(f"Failed to retrieve product data for {productUrl}")
@@ -222,7 +222,12 @@ class WebScraper:
         pass
 
 if __name__ == "__main__":
+    # add a start timer
+    startTime = time.time()
     collection = WebScraper.searchForProducts("phone")
     DataManager.saveCollectionsToCsvFolder("CsvFolder", [collection])
     DataManager.saveCollectionToJson("JsonFolder", collection)
+    # add an end timer
+    endTime = time.time()
+    print(f"Time taken: {endTime - startTime}")
     #WebScraper.parseProductPage("https://www.argos.co.uk/product/3186567?clickSR=slp:term:computer:38:930:1")
