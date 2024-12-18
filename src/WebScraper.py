@@ -1,9 +1,12 @@
 from typing import List, Dict, Any
 from src.Product import Product
+from src.Collection import Collection
+from src.DataManager import DataManager
 import json
 from bs4 import BeautifulSoup
 import requests
 import re
+import time
 
 
 class WebScraper:
@@ -16,8 +19,67 @@ class WebScraper:
     
     
     @staticmethod
-    def searchForProducts(productName : str) -> List[Dict[str, Any]]:
-        pass
+    def searchForProducts(productName : str) -> Collection:
+        searchURL = f"https://www.argos.co.uk/search/{productName}/opt/page:1/"
+        searchResultsData = WebScraper.extractSearchResultsJSON(searchURL)
+        if not searchResultsData:
+            return None
+        numOfPages : int = searchResultsData["redux"]["product"]["meta"]["totalPages"]
+        # TODO - currently capped at maximum 10 pages
+        for page in range(1, min(5, numOfPages + 1)):
+            time.sleep(0.2)
+            searchURL = f"https://www.argos.co.uk/search/{productName}/opt/page:{page}/"
+            currPageSearchResultsData = WebScraper.extractSearchResultsJSON(searchURL)
+            if not currPageSearchResultsData:
+                print(f"Failed to retrieve search results for page {page}")
+                continue
+            print(f"Successfully retrieved search results for page {page}")
+            searchResultsData["redux"]["product"]["products"].extend(currPageSearchResultsData["redux"]["product"]["products"])
+        
+        productPageUrls : List[str] = WebScraper.extractProductUrls(searchResultsData["redux"]["product"]["products"])
+        
+        extractedProductData : List[Product] = []
+        for productUrl in productPageUrls:
+            time.sleep(0.15)
+            productData : Product = WebScraper.parseProductPage(productUrl)
+            if not productData:
+                print(f"Failed to retrieve product data for {productUrl}")
+                continue
+            print(f"Successfully retrieved product data for {productUrl}")
+            extractedProductData.append(productData)
+        print(f"Successfully retrieved data for {len(extractedProductData)} products")
+        collection : Collection = Collection(productName, extractedProductData)
+        return collection
+        
+    
+    @staticmethod
+    def extractSearchResultsJSON(productUrl : str) -> Dict[str, Any]:
+        response = requests.get(productUrl, headers={"User-Agent": WebScraper.USER_AGENTS[0]})
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Find the script tag containing window.__data
+        script_tag = soup.find('script', string=lambda text: text and 'window.App=' in text)
+        
+        if script_tag:
+            # Find the start and end of the JSON data
+            start_index = script_tag.string.find('window.App=') + len('window.App=')
+            end_index = script_tag.string.rfind('}') + 1
+            
+            # Extract the JSON data
+            # Replacing undefined with null or will get an error when parse JSON structure
+            # with json.loads()
+            json_text = script_tag.string[start_index:end_index].replace('undefined', 'null')
+            
+            # Parse the JSON data
+            try:
+                data = json.loads(json_text)
+                return data
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON: {e}")
+                return None
+        else:
+            print("Could not find window.App in the page source")
+            return None
     
     """
     Extracts every product pages URL from search results page
@@ -26,8 +88,13 @@ class WebScraper:
     @return: A list of product page URLs
     """
     @staticmethod
-    def extractProductUrls(rawHtml : str) -> List[str]:
-        pass
+    def extractProductUrls(searchResultsProductsData : List[Dict[str, Any]]) -> List[str]:
+        extractedProductUrls : List[str] = []
+        for product in searchResultsProductsData:
+            productId : str = product["id"]
+            productUrl = f"https://www.argos.co.uk/product/{productId}"
+            extractedProductUrls.append(productUrl)
+        return extractedProductUrls
 
     """
     Extracts product data from a products page
@@ -135,6 +202,8 @@ class WebScraper:
             end_index = script_tag.string.rfind('}') + 1
             
             # Extract the JSON data
+            # Replacing undefined with null or will get an error when parse JSON structure
+            # with json.loads()
             json_text = script_tag.string[start_index:end_index].replace('undefined', 'null')
             
             # Parse the JSON data
@@ -153,4 +222,7 @@ class WebScraper:
         pass
 
 if __name__ == "__main__":
-    WebScraper.parseProductPage("https://www.argos.co.uk/product/3186567?clickSR=slp:term:computer:38:930:1")
+    collection = WebScraper.searchForProducts("phone")
+    DataManager.saveCollectionsToCsvFolder("CsvFolder", [collection])
+    DataManager.saveCollectionToJson("JsonFolder", collection)
+    #WebScraper.parseProductPage("https://www.argos.co.uk/product/3186567?clickSR=slp:term:computer:38:930:1")

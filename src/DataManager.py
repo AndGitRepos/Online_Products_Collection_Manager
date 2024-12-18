@@ -14,6 +14,12 @@ class DataManager:
     def __init__(self):
         raise TypeError("This is a utility class and cannot be instantiated")
 
+    """
+    Loads all csvs within folder and converts them to collections
+    
+    @param csvFolderName: The name of the folder containing the csvs
+    @return: A list of collections
+    """
     @staticmethod
     def loadCollectionsFromCsvFolder(csvFolderName : str) -> List[Collection]:
         if not isinstance(csvFolderName, str):
@@ -87,6 +93,12 @@ class DataManager:
 
         
 
+    """
+    Loads json data from given path and converts it to a collection
+    
+    @param filePath: The path to the json file
+    @return: The collection loaded from the json file
+    """
     @staticmethod
     def loadCollectionFromJson(filePath : str) -> Collection:
         if not isinstance(filePath, str):
@@ -101,6 +113,12 @@ class DataManager:
             
         return DataManager.convertDicitonaryToCollection(collectionDict)
     
+    """
+    Saves a collection to a json file within a directory(folder)
+    
+    @param directoryPath: The path to the directory where the json file will be saved
+    @param collection: The collection to be saved
+    """
     @staticmethod
     def saveCollectionToJson(directoryPath : str, collection : Collection) -> None:
         if not isinstance(directoryPath, str):
