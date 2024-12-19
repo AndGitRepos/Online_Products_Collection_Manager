@@ -25,6 +25,7 @@ class WebScraper:
     MAX_SLEEP_TIME: int = 3.0
     MAX_CONCURRENT_REQUESTS: int = 5
     BASE_URL: str = "https://www.argos.co.uk"
+    ROBOTS_TXT_CONTENT: str = None
 
     def __init__(self):
         raise TypeError("This is a utility class and cannot be instantiated")
@@ -54,34 +55,40 @@ class WebScraper:
             "Cache-Control": "max-age=0",
         }
 
+    
+    @staticmethod
+    async def fetch_robots_txt(client: RetryClient) -> None:
+        headers = WebScraper.get_headers()
+        robotsUrl = urllib.parse.urljoin(WebScraper.BASE_URL, "/robots.txt")
+        try:
+            async with client.get(robotsUrl, headers=headers) as response:
+                if response.status == 200:
+                    WebScraper.ROBOTS_TXT_CONTENT = await response.text()
+                else:
+                    print(f"Failed to fetch robots.txt. Status: {response.status}")
+                    WebScraper.ROBOTS_TXT_CONTENT = ""
+        except Exception as e:
+            print(f"Error fetching robots.txt: {e}")
+            WebScraper.ROBOTS_TXT_CONTENT = ""
+
     """
     This method will check the robots.txt file of the base website and
     verify that the path we want to scrape is allowed
     """
     @staticmethod
     async def check_robots_txt(client: RetryClient, path: str) -> bool:
-        headers = WebScraper.get_headers()
-        robotsUrl = urllib.parse.urljoin(WebScraper.BASE_URL, "/robots.txt")
-        try:
-            async with client.get(robotsUrl, headers=headers) as response:
-                if response.status == 200:
-                    content = await response.text()
-                    lines = content.splitlines()
-                    for line in lines:
-                        if line.lower().startswith("disallow:"):
-                            disallowed_path = line.split(":", 1)[1].strip()
-                            if path.startswith(disallowed_path):
-                                print(f"Access to {path} is disallowed by robots.txt")
-                                return False
-                    print(f"Access to {path} is allowed by robots.txt")
-                    return True
-                else:
-                    print(f"Failed to fetch robots.txt. Status: {response.status}")
-                    print(f"Headers user-agent: {headers['User-Agent']}")
-                    return True  # Assume allowed if we can't fetch robots.txt
-        except Exception as e:
-            print(f"Error fetching robots.txt: {e}")
-            return True  # Assume allowed if there's an error
+        if WebScraper.ROBOTS_TXT_CONTENT is None:
+            await WebScraper.fetch_robots_txt(client)
+
+        lines = WebScraper.ROBOTS_TXT_CONTENT.splitlines()
+        for line in lines:
+            if line.lower().startswith("disallow:"):
+                disallowedPath = line.split(":", 1)[1].strip()
+                if path.startswith(disallowedPath):
+                    print(f"Access to {path} is disallowed by robots.txt")
+                    return False
+        print(f"Access to {path} is allowed by robots.txt")
+        return True
     
     """
     Given a page URL, this method will extract the large JSON structure that it stored within a script tag
@@ -148,7 +155,9 @@ class WebScraper:
                 return None
 
             # Search for productName and gather all pages results
-            searchResultsData : Dict[str, Any] = await WebScraper.fetchAllSearchResults(retryClient, searchPath, productName)
+            searchResultsData: Dict[str, Any] = await WebScraper.fetchAllSearchResults(
+                retryClient, searchPath, productName
+            )
             if not searchResultsData:
                 print("No search results found")
                 return None
@@ -156,14 +165,27 @@ class WebScraper:
             # From the search results construct each products page URL 
             # and save the total number of reviews each product has
             numOfResults : int = searchResultsData["redux"]["product"]["numberOfResults"]
-            productPageUrlsAndNumOfReviews: List[tuple] = WebScraper.extractProductUrlsAndNumOfReviews(searchResultsData["redux"]["product"]["products"], productName, numOfResults)
+            productPageUrlsAndNumOfReviews: List[tuple] = WebScraper.extractProductUrlsAndNumOfReviews(
+                searchResultsData["redux"]["product"]["products"], 
+                productName, 
+                numOfResults
+            )
 
             # Extract product data from each page constructed, resulting in a list of Products collected
             extractedProductData: List[Product] = []
             semaphore = asyncio.Semaphore(WebScraper.MAX_CONCURRENT_REQUESTS)
-            tasks = [WebScraper.parseProductPage(retryClient, productUrlAndNumOfReviews[0], productUrlAndNumOfReviews[1], f"https://www.argos.co.uk/search/{productName}/", semaphore) for productUrlAndNumOfReviews in productPageUrlsAndNumOfReviews]
+            tasks = [
+                WebScraper.parseProductPage(
+                    retryClient, 
+                    productUrlAndNumOfReviews[0], 
+                    productUrlAndNumOfReviews[1], 
+                    f"https://www.argos.co.uk/search/{productName}/", 
+                    semaphore
+                ) 
+                for productUrlAndNumOfReviews in productPageUrlsAndNumOfReviews
+            ]
             extractedProductData = await asyncio.gather(*tasks)
-            extractedProductData : List[Product] = [product for product in extractedProductData if product]
+            extractedProductData: List[Product] = [product for product in extractedProductData if product]
             
             if not extractedProductData:
                 print("No products found")
@@ -185,14 +207,16 @@ class WebScraper:
         # Constructing search URL for first page so that we can retrieve its JSON data 
         # structure to gain information on the total number of search results pages
         searchURL : str = f"{WebScraper.BASE_URL}{searchPath}/opt/page:1/?clickOrigin=searchbar:search:term:{productName}"
-        searchResultsData : Dict[str, Any] = await WebScraper.extractScriptJsonData(retryClient, searchURL, WebScraper.BASE_URL, "window.App=")
+        searchResultsData: Dict[str, Any] = await WebScraper.extractScriptJsonData(
+            retryClient, searchURL, WebScraper.BASE_URL, "window.App="
+        )
         if not searchResultsData:
             return None
         # Constructing the search URLs for every other page and 
         # creating tasks to extract the JSON data structure from each of them
         numOfPages: int = searchResultsData["redux"]["product"]["meta"]["totalPages"]
         tasks = []
-        for page in range(2, min(3, numOfPages + 1)):
+        for page in range(2, min(7, numOfPages + 1)):
             searchURL : str = f"{WebScraper.BASE_URL}{searchPath}/opt/page:{page}/"
             tasks.append(WebScraper.extractScriptJsonData(retryClient, searchURL, WebScraper.BASE_URL, "window.App="))
 
@@ -214,13 +238,12 @@ class WebScraper:
         numberOfResults : int
     ) -> List[str]:
         extractedProductUrlsAndNumOfReviews : List[tuple] = []
-        for i in range (len(searchResultsProductsData)):
-            product : Dict[str, Any] = searchResultsProductsData[i]
-            productID : str = product["id"]
-            productUrl : str = f"{WebScraper.BASE_URL}/product/{productID}?clickSR=slp:term:{productName}:{i + 1}:{numberOfResults}:1"
-            numOfReviews : int = product["attributes"]["reviewsCount"]
+        for i, product in enumerate(searchResultsProductsData):
+            productID: str = product["id"]
+            productUrl: str = (f"{WebScraper.BASE_URL}/product/{productID}"
+                               f"?clickSR=slp:term:{productName}:{i + 1}:{numberOfResults}:1")
+            numOfReviews: int = product["attributes"]["reviewsCount"]
             extractedProductUrlsAndNumOfReviews.append((productUrl, numOfReviews))
-            
         return extractedProductUrlsAndNumOfReviews
 
     """
@@ -242,7 +265,9 @@ class WebScraper:
                 return None
             # Extract the JSON data structure containing the product data
             await asyncio.sleep(random.uniform(WebScraper.MIN_SLEEP_TIME, WebScraper.MAX_SLEEP_TIME))
-            productData: Dict[str, Any] = await WebScraper.extractScriptJsonData(client, productUrl, referer, "window.__data=")
+            productData: Dict[str, Any] = await WebScraper.extractScriptJsonData(
+                client, productUrl, referer, "window.__data="
+            )
             if not productData:
                 return None
             # Extract the product data needed within the JSON structure

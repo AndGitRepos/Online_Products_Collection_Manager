@@ -35,7 +35,7 @@ def install_dependencies(requirements_file='main/requirements.txt'):
 
 async def main():
     start_time = time.time()
-    collection = await WebScraper.searchForProducts("computer")
+    collection = await WebScraper.searchForProducts("phone")
     if collection is None:
         print("No collection found")
         return
