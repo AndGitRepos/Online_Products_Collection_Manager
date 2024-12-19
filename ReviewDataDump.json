@@ -1,0 +1,1540 @@
+{
+    "data": {
+        "Limit": 10,
+        "Offset": 10,
+        "TotalResults": 1620,
+        "Locale": "en_GB",
+        "Results": [
+            {
+                "Id": "170607518",
+                "CID": "c1a22915-83c5-544d-bcfa-0404049d4966",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-15T22:30:08.000+00:00",
+                "LastModificationTime": "2024-12-17T21:43:21.000+00:00",
+                "ProductId": "9520141",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Starlight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Birmingham",
+                "AuthorId": "102229586",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 4,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 1,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 1,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17342962yRhYG3hj9G",
+                "SubmissionTime": "2024-12-15T20:56:43.000+00:00",
+                "ReviewText": "I bought my phone 3 weeks ago and was easy to set up from my old i phone, holds it charge well., but still haven’t had my nectar points for the purchase from Argos",
+                "Title": "Great service",
+                "UserNickname": "Jos",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "35to44",
+                        "Id": "Age",
+                        "ValueLabel": "35 to 44",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 4,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 4,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 3,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170599197",
+                "CID": "fcd44efa-57e5-5a54-acb5-af5b6a03bed2",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-15T15:15:21.000+00:00",
+                "LastModificationTime": "2024-12-18T23:09:21.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Derby",
+                "AuthorId": "97906528",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 4,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 2,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 2,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__173427398En3BCoG0D",
+                "SubmissionTime": "2024-12-15T14:46:29.000+00:00",
+                "ReviewText": "Good iPhone with all the essentials and more for a mid range reasonable price (£400s).\r\n\r\nPerfects if you don’t care about the gimmicks.",
+                "Title": "iPhone 13",
+                "UserNickname": "Aetius",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "25to34",
+                        "Id": "Age",
+                        "ValueLabel": "25 to 34",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 4,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 4,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 4,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170595915",
+                "CID": "44ace67e-e83d-59c5-956b-60882cc12bdf",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-15T13:30:29.000+00:00",
+                "LastModificationTime": "2024-12-17T21:43:33.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Southampton",
+                "AuthorId": "105141335",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 1,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 1,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17342679MEBTgVAlet",
+                "SubmissionTime": "2024-12-15T13:06:22.000+00:00",
+                "ReviewText": "I bought this few weeks ago very happy with product",
+                "Title": "Simple and straightforward.",
+                "UserNickname": "Cjjt",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "25to34",
+                        "Id": "Age",
+                        "ValueLabel": "25 to 34",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170595421",
+                "CID": "1811551d-35f0-5e7b-8c38-ea47d11a5519",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-15T13:15:27.000+00:00",
+                "LastModificationTime": "2024-12-17T21:43:46.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Liverpool",
+                "AuthorId": "36620155",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 1,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 1,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17342675zc6Gaj7ClK",
+                "SubmissionTime": "2024-12-15T12:59:38.000+00:00",
+                "ReviewText": "Not much difference between the new iPhones in our days, all of them are pretty similar and you won’t notice any significant differences between them. Also Argos almost always offer a great prices on their products! Made up with this purchase!",
+                "Title": "Amazing phone for amazing price!",
+                "UserNickname": "Crumble",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "35to44",
+                        "Id": "Age",
+                        "ValueLabel": "35 to 44",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170584534",
+                "CID": "ba55b631-85e0-5567-88db-33eb8e7a01ed",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-15T01:45:11.000+00:00",
+                "LastModificationTime": "2024-12-15T01:45:11.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprc",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Bury",
+                "AuthorId": "7980833",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "TotalFeedbackCount": 0,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 0,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17342249WLRMJGjswc",
+                "SubmissionTime": "2024-12-15T01:09:18.000+00:00",
+                "ReviewText": "Treated myself to a new phone, really pleased with it. Payed on my Argos card over 12 months free credit, great bonus! Happy with service at Argos, as always. Happy with \r\niPhone 13! Thanks",
+                "Title": "Brand new phone",
+                "UserNickname": "Net60",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "55to64",
+                        "Id": "Age",
+                        "ValueLabel": "55 to 64",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 4,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "Helpfulness": null,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170579118",
+                "CID": "970eca6f-6466-5c4e-af3f-2a1219111e59",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-14T18:30:09.000+00:00",
+                "LastModificationTime": "2024-12-14T18:30:09.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "London",
+                "AuthorId": "46705485",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "TotalFeedbackCount": 0,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 0,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17341996z2VU36lAQY",
+                "SubmissionTime": "2024-12-14T18:08:03.000+00:00",
+                "ReviewText": "Great Iphone, great service, amazing price.",
+                "Title": "Great",
+                "UserNickname": "Mon",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "35to44",
+                        "Id": "Age",
+                        "ValueLabel": "35 to 44",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "Helpfulness": null,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170575065",
+                "CID": "c4ba5375-43ec-51fa-99ac-a69dde9cea69",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-14T15:30:09.000+00:00",
+                "LastModificationTime": "2024-12-17T21:44:05.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "West London",
+                "AuthorId": "19732017",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 0.6666669845581055,
+                "TotalFeedbackCount": 3,
+                "TotalNegativeFeedbackCount": 1,
+                "TotalPositiveFeedbackCount": 2,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17341892zjFZOrsKr3",
+                "SubmissionTime": "2024-12-14T15:14:18.000+00:00",
+                "ReviewText": "Bought this after moving on from a 5 year old iPhone 8. Very pleased with it. Battery seems to hold out well. Does all I need.",
+                "Title": "Still the best phones",
+                "UserNickname": "Tricky",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "65orOver",
+                        "Id": "Age",
+                        "ValueLabel": "65 or over",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170573191",
+                "CID": "2a4eadff-287c-5c6c-b0e0-f7b144bea1b8",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-14T14:45:13.000+00:00",
+                "LastModificationTime": "2024-12-17T21:44:09.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprfn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Planet Earth",
+                "AuthorId": "24496325",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 1,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 1,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17341849teC7StwABv",
+                "SubmissionTime": "2024-12-14T14:03:02.000+00:00",
+                "ReviewText": "Does exactly what it says on the tin. Highly recommended. Battery life superb..charged once every 24hours.",
+                "Title": "Great phone. User friendly!",
+                "UserNickname": "Jeronimo",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "45to54",
+                        "Id": "Age",
+                        "ValueLabel": "45 to 54",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170572772",
+                "CID": "a762ea68-ce53-5ac3-a9f2-423719a27def",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-14T14:15:13.000+00:00",
+                "LastModificationTime": "2024-12-17T21:44:22.000+00:00",
+                "ProductId": "9520062",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                "CampaignId": "arprn",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Leicester",
+                "AuthorId": "68767931",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 1,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 1,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__173418432p28fdmrEK",
+                "SubmissionTime": "2024-12-14T13:52:20.000+00:00",
+                "ReviewText": "It’s nice looking phone, phone itself is great, fast",
+                "Title": "Very good",
+                "UserNickname": "Chris",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "25to34",
+                        "Id": "Age",
+                        "ValueLabel": "25 to 34",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            },
+            {
+                "Id": "170567968",
+                "CID": "7805615b-f814-594a-ac6d-d7b1882ab35e",
+                "SourceClient": "argos",
+                "LastModeratedTime": "2024-12-14T12:00:11.000+00:00",
+                "LastModificationTime": "2024-12-17T21:44:37.000+00:00",
+                "ProductId": "9520141",
+                "OriginalProductName": "SIM Free iPhone 13 5G 128GB Mobile Phone - Starlight",
+                "CampaignId": "arpr5",
+                "ContextDataValuesOrder": [
+                    "Age"
+                ],
+                "UserLocation": "Kirkintilloch",
+                "AuthorId": "9835939",
+                "ContentLocale": "en_GB",
+                "IsFeatured": false,
+                "TotalInappropriateFeedbackCount": 0,
+                "TotalClientResponseCount": 0,
+                "TotalCommentCount": 0,
+                "Rating": 5,
+                "SecondaryRatingsOrder": [
+                    "Display",
+                    "soundquality",
+                    "EaseOfUse",
+                    "Features"
+                ],
+                "IsRatingsOnly": false,
+                "IsRecommended": true,
+                "Helpfulness": 1,
+                "TotalFeedbackCount": 1,
+                "TotalNegativeFeedbackCount": 0,
+                "TotalPositiveFeedbackCount": 1,
+                "ModerationStatus": "APPROVED",
+                "SubmissionId": "r11493-en__17341759bc1sfJ2R2J",
+                "SubmissionTime": "2024-12-14T11:32:26.000+00:00",
+                "ReviewText": "As an older user I didn’t need the latest addition but this one is the perfect model to make sure I can continue to use an iPhone without worrying about it running out of updated life. Okay",
+                "Title": "Good phone to update an older model.",
+                "UserNickname": "OAP",
+                "ContextDataValues": {
+                    "Age": {
+                        "Value": "65orOver",
+                        "Id": "Age",
+                        "ValueLabel": "65 or over",
+                        "DimensionLabel": "Age"
+                    }
+                },
+                "SecondaryRatings": {
+                    "EaseOfUse": {
+                        "Value": 5,
+                        "Id": "EaseOfUse",
+                        "ValueRange": 5,
+                        "Label": "Ease of use",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Display": {
+                        "Value": 5,
+                        "Id": "Display",
+                        "ValueRange": 5,
+                        "Label": "Display",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "Features": {
+                        "Value": 5,
+                        "Id": "Features",
+                        "ValueRange": 5,
+                        "Label": "Features",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    },
+                    "soundquality": {
+                        "Value": 5,
+                        "Id": "soundquality",
+                        "ValueRange": 5,
+                        "Label": "Sound Quality",
+                        "DisplayType": "NORMAL",
+                        "MinLabel": null,
+                        "ValueLabel": null,
+                        "MaxLabel": null
+                    }
+                },
+                "InappropriateFeedbackList": [],
+                "Pros": null,
+                "CommentIds": [],
+                "RatingRange": 5,
+                "IsSyndicated": false,
+                "ProductRecommendationIds": [],
+                "Badges": {},
+                "TagDimensions": {},
+                "Cons": null,
+                "TagDimensionsOrder": [],
+                "BadgesOrder": [],
+                "AdditionalFieldsOrder": [],
+                "Photos": [],
+                "AdditionalFields": {},
+                "ClientResponses": [],
+                "Videos": []
+            }
+        ],
+        "Includes": {
+            "Products": {
+                "9520062": {
+                    "FamilyIds": [
+                        "9520134",
+                        "SIMFreeiPhone135GMobilePhone"
+                    ],
+                    "AttributesOrder": [
+                        "BV_WB_FAMILY",
+                        "AVAILABILITY",
+                        "BV_FE_EXPAND",
+                        "BV_FE_FAMILY",
+                        "BV_WB_EXPAND",
+                        "GTIN14"
+                    ],
+                    "Attributes": {
+                        "BV_WB_FAMILY": {
+                            "Id": "BV_WB_FAMILY",
+                            "Values": [
+                                {
+                                    "Value": "SIMFreeiPhone135GMobilePhone",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "AVAILABILITY": {
+                            "Id": "AVAILABILITY",
+                            "Values": [
+                                {
+                                    "Value": "True",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "BV_FE_EXPAND": {
+                            "Id": "BV_FE_EXPAND",
+                            "Values": [
+                                {
+                                    "Value": "BV_FE_FAMILY:9520134",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "BV_FE_FAMILY": {
+                            "Id": "BV_FE_FAMILY",
+                            "Values": [
+                                {
+                                    "Value": "9520134",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "BV_WB_EXPAND": {
+                            "Id": "BV_WB_EXPAND",
+                            "Values": [
+                                {
+                                    "Value": "BV_WB_FAMILY:SIMFreeiPhone135GMobilePhone",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "GTIN14": {
+                            "Id": "GTIN14",
+                            "Values": [
+                                {
+                                    "Value": "00194252707043",
+                                    "Locale": null
+                                }
+                            ]
+                        }
+                    },
+                    "UPCs": [
+                        "194252707043"
+                    ],
+                    "Name": "SIM Free iPhone 13 5G 128GB Mobile Phone - Midnight",
+                    "Description": "Your new superpower. All-out standout. The iPhone 13 features the most advanced dual-camera system ever on an iPhone. The colourful, sharper and brighter 6.1-inch Super Retina XDR display and durable flat-edge design with Ceramic Shield. A15 Bionic chip, the world's fastest smartphone chip for lightning-fast performance. A big leap in battery life. Please note: In order to reduce e-waste, the manufacturer has chosen not to include a USB plug in the box. You can use an existing USB plug with the included USB cable or purchase one from our site. Please see the 'Box Contents' section below for more details. The iOS 15 packs new features to do more with iPhone than ever before. 5G for superfast downloads and high-quality streaming for up to 19 hours of video playback. Supports MagSafe accessories for easy attach and faster wireless charging. Incredible advanced dual-camera system with 12MP Wide and Ultra Wide cameras. Photographic Styles, Smart HDR 4, Night mode & 4K Dolby Vision HDR recording. The new Cinematic mode adds shallow depth of field and shifts focus automatically in your videos. 12MP TrueDepth front camera with Night mode and 4K Dolby Vision HDR recording for sharper, more detailed photos and videos. What's in the box - iPhone with iOS 15, USB-C to Lightning Cable & Documentation. Model number: MLPF3B/A. Network:5G network capability. Dual SIM card phone: supports 2 SIM cards simultaneously. SIM card type: nano SIM and eSIM. Dual eSIM support. Display and Design:6.1 inch OLED display. Resolution 2532 x 1170 pixels.  With a density of 460 pixels per inch. Touch screen. Toughened glass. Dimensions:Size H146.7, W71.5, D7.65mm. Weight 173g. Camera and Video:Dual camera. Front camera 12MP. Rear camera 12MP. Second rear camera 12MP. True Tone flash with slow sync. Camera features: 12MP TrueDepth camera, Animoji and Memoji, Night mode, Deep Fusion, Smart HDR 4, Photographic Styles. Video capture in 4K HDR quality. Storage:Internal memory 128GB. Technical specifications: A15 Bionic chip processor. Operating system: iOS 15. App store compatibility: Apple app store. Product features:MP3. Wireless charging. This phone features fast charge technology - faster than standard charging, for when time is of the essence. Contactless payment Link up your card to your phone for easy buying. Water resistant up to 6m depth. Connectivity:Wi-Fi. Bluetooth. NFC. GPS. Box Contents:iPhone 13, USB-C Charge Cable. Only charging cable included - USB C charger required. General information:EAN: 194252707043. Manufacturer's 1 year guarantee.",
+                    "ManufacturerPartNumbers": [
+                        "9520062"
+                    ],
+                    "ImageUrl": "https://media.4rgos.it/i/Argos/9520062_R_Z001A",
+                    "Id": "9520062",
+                    "CategoryId": "30147",
+                    "BrandExternalId": "apple",
+                    "Brand": {
+                        "Id": "apple",
+                        "Name": "Apple"
+                    },
+                    "Active": true,
+                    "ProductPageUrl": "https://www.argos.co.uk/product/9520062",
+                    "Disabled": false,
+                    "QuestionIds": [],
+                    "EANs": [],
+                    "StoryIds": [],
+                    "ModelNumbers": [],
+                    "ReviewIds": [],
+                    "ISBNs": [],
+                    "ReviewStatistics": {
+                        "FeaturedReviewCount": 0,
+                        "NotHelpfulVoteCount": 340,
+                        "FirstSubmissionTime": "2021-10-13T10:59:15.000+00:00",
+                        "LastSubmissionTime": "2024-12-18T17:26:28.000+00:00",
+                        "SecondaryRatingsAveragesOrder": [
+                            "Display",
+                            "soundquality",
+                            "EaseOfUse",
+                            "Features"
+                        ],
+                        "SecondaryRatingsAverages": {
+                            "soundquality": {
+                                "Id": "soundquality",
+                                "AverageRating": 4.859900373599004,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Sound Quality"
+                            },
+                            "Features": {
+                                "Id": "Features",
+                                "AverageRating": 4.847894406033941,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Features"
+                            },
+                            "Display": {
+                                "Id": "Display",
+                                "AverageRating": 4.9035469819539514,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Display"
+                            },
+                            "EaseOfUse": {
+                                "Id": "EaseOfUse",
+                                "AverageRating": 4.841220423412204,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Ease of use"
+                            }
+                        },
+                        "RatingDistribution": [
+                            {
+                                "RatingValue": 5,
+                                "Count": 1473
+                            },
+                            {
+                                "RatingValue": 4,
+                                "Count": 123
+                            },
+                            {
+                                "RatingValue": 3,
+                                "Count": 13
+                            },
+                            {
+                                "RatingValue": 1,
+                                "Count": 9
+                            },
+                            {
+                                "RatingValue": 2,
+                                "Count": 2
+                            }
+                        ],
+                        "TotalReviewCount": 1620,
+                        "AverageOverallRating": 4.882098765432099,
+                        "ContextDataDistributionOrder": [
+                            "Age",
+                            "AgreedToTermsAndConditionsAPO"
+                        ],
+                        "ContextDataDistribution": {
+                            "Age": {
+                                "Id": "Age",
+                                "Values": [
+                                    {
+                                        "Count": 356,
+                                        "Value": "35to44",
+                                        "ValueLabel": "35 to 44"
+                                    },
+                                    {
+                                        "Count": 371,
+                                        "Value": "45to54",
+                                        "ValueLabel": "45 to 54"
+                                    },
+                                    {
+                                        "Count": 275,
+                                        "Value": "65orOver",
+                                        "ValueLabel": "65 or over"
+                                    },
+                                    {
+                                        "Count": 262,
+                                        "Value": "55to64",
+                                        "ValueLabel": "55 to 64"
+                                    },
+                                    {
+                                        "Count": 128,
+                                        "Value": "18to24",
+                                        "ValueLabel": "18 to 24"
+                                    },
+                                    {
+                                        "Count": 201,
+                                        "Value": "25to34",
+                                        "ValueLabel": "25 to 34"
+                                    }
+                                ],
+                                "Label": "Age"
+                            },
+                            "AgreedToTermsAndConditionsAPO": {
+                                "Id": "AgreedToTermsAndConditionsAPO",
+                                "Values": [
+                                    {
+                                        "Count": 440,
+                                        "Value": "true",
+                                        "ValueLabel": "Yes"
+                                    },
+                                    {
+                                        "Count": 730,
+                                        "Value": "false",
+                                        "ValueLabel": "No"
+                                    }
+                                ],
+                                "Label": "Email me if customers have questions about this product – I’m happy to help!"
+                            }
+                        },
+                        "RatingsOnlyReviewCount": 0,
+                        "NotRecommendedCount": 34,
+                        "RecommendedCount": 1528,
+                        "HelpfulVoteCount": 559,
+                        "TagDistribution": {},
+                        "TagDistributionOrder": [],
+                        "OverallRatingRange": 5
+                    },
+                    "TotalReviewCount": 1620
+                },
+                "9520141": {
+                    "FamilyIds": [
+                        "9520134",
+                        "SIMFreeiPhone135GMobilePhone"
+                    ],
+                    "AttributesOrder": [
+                        "BV_WB_FAMILY",
+                        "AVAILABILITY",
+                        "BV_FE_EXPAND",
+                        "BV_FE_FAMILY",
+                        "BV_WB_EXPAND",
+                        "GTIN14"
+                    ],
+                    "Attributes": {
+                        "BV_WB_FAMILY": {
+                            "Id": "BV_WB_FAMILY",
+                            "Values": [
+                                {
+                                    "Value": "SIMFreeiPhone135GMobilePhone",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "AVAILABILITY": {
+                            "Id": "AVAILABILITY",
+                            "Values": [
+                                {
+                                    "Value": "True",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "BV_FE_EXPAND": {
+                            "Id": "BV_FE_EXPAND",
+                            "Values": [
+                                {
+                                    "Value": "BV_FE_FAMILY:9520134",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "BV_FE_FAMILY": {
+                            "Id": "BV_FE_FAMILY",
+                            "Values": [
+                                {
+                                    "Value": "9520134",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "BV_WB_EXPAND": {
+                            "Id": "BV_WB_EXPAND",
+                            "Values": [
+                                {
+                                    "Value": "BV_WB_FAMILY:SIMFreeiPhone135GMobilePhone",
+                                    "Locale": null
+                                }
+                            ]
+                        },
+                        "GTIN14": {
+                            "Id": "GTIN14",
+                            "Values": [
+                                {
+                                    "Value": "00194252707319",
+                                    "Locale": null
+                                }
+                            ]
+                        }
+                    },
+                    "UPCs": [
+                        "194252707319"
+                    ],
+                    "Name": "SIM Free iPhone 13 5G 128GB Mobile Phone - Starlight",
+                    "Description": "Your new superpower. All-out standout. The iPhone 13 features the most advanced dual-camera system ever on an iPhone. The colourful, sharper and brighter 6.1-inch Super Retina XDR display and durable flat-edge design with Ceramic Shield. A15 Bionic chip, the world's fastest smartphone chip for lightning-fast performance. A big leap in battery life. Please note: In order to reduce e-waste, the manufacturer has chosen not to include a USB plug in the box. You can use an existing USB plug with the included USB cable or purchase one from our site. Please see the 'Box Contents' section below for more details. The iOS 15 packs new features to do more with iPhone than ever before. 5G for superfast downloads and high-quality streaming for up to 19 hours of video playback. Supports MagSafe accessories for easy attach and faster wireless charging. Incredible advanced dual-camera system with 12MP Wide and Ultra Wide cameras. Photographic Styles, Smart HDR 4, Night mode & 4K Dolby Vision HDR recording. The new Cinematic mode adds shallow depth of field and shifts focus automatically in your videos. 12MP TrueDepth front camera with Night mode and 4K Dolby Vision HDR recording for sharper, more detailed photos and videos. What's in the box - iPhone with iOS 15, USB-C to Lightning Cable & Documentation. Model number: MLPG3B/A. Network:5G network capability. Dual SIM card phone: supports 2 SIM cards simultaneously. SIM card type: nano SIM and eSIM. Dual eSIM support. Display and Design:6.1 inch OLED display. Resolution 2532 x 1170 pixels.  With a density of 460 pixels per inch. Touch screen. Toughened glass. Dimensions:Size H146.7, W71.5, D7.65mm. Weight 173g. Camera and Video:Dual camera. Front camera 12MP. Rear camera 12MP. Second rear camera 12MP. True Tone flash with slow sync. Camera features: 12MP TrueDepth camera, Animoji and Memoji, Night mode, Deep Fusion, Smart HDR 4, Photographic Styles. Video capture in 4K HDR quality. Storage:Internal memory 128GB. Technical specifications: A15 Bionic chip processor. Operating system: iOS 15. App store compatibility: Apple app store. Product features:MP3. Wireless charging. This phone features fast charge technology - faster than standard charging, for when time is of the essence. Contactless payment Link up your card to your phone for easy buying. Water resistant up to 6m depth. Connectivity:Wi-Fi. Bluetooth. NFC. GPS. Box Contents:iPhone 13, USB-C Charge Cable. Only charging cable included - USB C charger required. General information:EAN: 194252707319. Manufacturer's 1 year guarantee.",
+                    "ManufacturerPartNumbers": [
+                        "9520141"
+                    ],
+                    "ImageUrl": "https://media.4rgos.it/i/Argos/9520141_R_Z001A",
+                    "Id": "9520141",
+                    "CategoryId": "30147",
+                    "BrandExternalId": "apple",
+                    "Brand": {
+                        "Id": "apple",
+                        "Name": "Apple"
+                    },
+                    "Active": true,
+                    "ProductPageUrl": "https://www.argos.co.uk/product/9520141",
+                    "Disabled": false,
+                    "QuestionIds": [],
+                    "EANs": [],
+                    "StoryIds": [],
+                    "ModelNumbers": [],
+                    "ReviewIds": [],
+                    "ISBNs": [],
+                    "ReviewStatistics": {
+                        "SecondaryRatingsAveragesOrder": [
+                            "Display",
+                            "soundquality",
+                            "EaseOfUse",
+                            "Features"
+                        ],
+                        "SecondaryRatingsAverages": {
+                            "soundquality": {
+                                "Id": "soundquality",
+                                "AverageRating": 4.859900373599004,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Sound Quality"
+                            },
+                            "Display": {
+                                "Id": "Display",
+                                "AverageRating": 4.9035469819539514,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Display"
+                            },
+                            "EaseOfUse": {
+                                "Id": "EaseOfUse",
+                                "AverageRating": 4.841220423412204,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Ease of use"
+                            },
+                            "Features": {
+                                "Id": "Features",
+                                "AverageRating": 4.847894406033941,
+                                "MaxLabel": null,
+                                "ValueRange": 5,
+                                "MinLabel": null,
+                                "DisplayType": "NORMAL",
+                                "Label": "Features"
+                            }
+                        },
+                        "ContextDataDistributionOrder": [
+                            "Age",
+                            "AgreedToTermsAndConditionsAPO"
+                        ],
+                        "ContextDataDistribution": {
+                            "Age": {
+                                "Id": "Age",
+                                "Values": [
+                                    {
+                                        "Count": 356,
+                                        "Value": "35to44",
+                                        "ValueLabel": "35 to 44"
+                                    },
+                                    {
+                                        "Count": 371,
+                                        "Value": "45to54",
+                                        "ValueLabel": "45 to 54"
+                                    },
+                                    {
+                                        "Count": 275,
+                                        "Value": "65orOver",
+                                        "ValueLabel": "65 or over"
+                                    },
+                                    {
+                                        "Count": 262,
+                                        "Value": "55to64",
+                                        "ValueLabel": "55 to 64"
+                                    },
+                                    {
+                                        "Count": 128,
+                                        "Value": "18to24",
+                                        "ValueLabel": "18 to 24"
+                                    },
+                                    {
+                                        "Count": 201,
+                                        "Value": "25to34",
+                                        "ValueLabel": "25 to 34"
+                                    }
+                                ],
+                                "Label": "Age"
+                            },
+                            "AgreedToTermsAndConditionsAPO": {
+                                "Id": "AgreedToTermsAndConditionsAPO",
+                                "Values": [
+                                    {
+                                        "Count": 440,
+                                        "Value": "true",
+                                        "ValueLabel": "Yes"
+                                    },
+                                    {
+                                        "Count": 730,
+                                        "Value": "false",
+                                        "ValueLabel": "No"
+                                    }
+                                ],
+                                "Label": "Email me if customers have questions about this product – I’m happy to help!"
+                            }
+                        },
+                        "RecommendedCount": 1528,
+                        "RatingDistribution": [
+                            {
+                                "RatingValue": 5,
+                                "Count": 1473
+                            },
+                            {
+                                "RatingValue": 4,
+                                "Count": 123
+                            },
+                            {
+                                "RatingValue": 3,
+                                "Count": 13
+                            },
+                            {
+                                "RatingValue": 1,
+                                "Count": 9
+                            },
+                            {
+                                "RatingValue": 2,
+                                "Count": 2
+                            }
+                        ],
+                        "HelpfulVoteCount": 559,
+                        "FirstSubmissionTime": "2021-10-13T10:59:15.000+00:00",
+                        "LastSubmissionTime": "2024-12-18T17:26:28.000+00:00",
+                        "FeaturedReviewCount": 0,
+                        "NotHelpfulVoteCount": 340,
+                        "NotRecommendedCount": 34,
+                        "RatingsOnlyReviewCount": 0,
+                        "AverageOverallRating": 4.882098765432099,
+                        "TotalReviewCount": 1620,
+                        "TagDistribution": {},
+                        "TagDistributionOrder": [],
+                        "OverallRatingRange": 5
+                    },
+                    "TotalReviewCount": 1620
+                }
+            },
+            "ProductsOrder": [
+                "9520141",
+                "9520062"
+            ]
+        },
+        "HasErrors": false,
+        "Errors": []
+    }
+}
