@@ -2,3 +2,6 @@ aiohttp
 asyncio
 aiohttp-retry
 beautifulsoup4
+dash
+dash-bootstrap-components
+dash-extensions

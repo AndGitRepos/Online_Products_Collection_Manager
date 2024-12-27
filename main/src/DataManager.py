@@ -3,8 +3,11 @@ from src.Product import Product
 from typing import List, Dict, Any
 import json
 import csv
+import sys
 import os
 import ast
+
+csv.field_size_limit(sys.maxsize)
 
 # Might be best as a static class
 # Each Dict[str, Any] is a collection
