@@ -1,20 +1,16 @@
-import dash
-from dash import html, dcc, Output, Input
-import dash_bootstrap_components as dbc
+from dash import dash, html, dcc, Output, Input
 from .callbacks import register_callbacks
 from .main_layout import create_main_layout
 from .collections_layout import create_collections_layout
 import os
 
 def create_app():
-    assets_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
     app = dash.Dash(__name__, 
                 external_stylesheets=[
-                    '/assets/common.css',
-                    '/assets/main.css',
-                    '/assets/collections.css'
+                    '/assets/styling/common.css',
+                    '/assets/styling/main.css',
+                    '/assets/styling/collections.css'
                 ],
-                assets_folder=assets_path,
                 suppress_callback_exceptions=True)
     
     app.layout = html.Div([

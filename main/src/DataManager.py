@@ -24,7 +24,7 @@ class DataManager:
     @return: A list of collections
     """
     @staticmethod
-    def loadCollectionsFromCsvFolder(csvFolderName : str) -> List[Collection]:
+    def load_collections_from_csv_folder(csvFolderName : str) -> List[Collection]:
         if not isinstance(csvFolderName, str):
             raise TypeError("Filename must be a string")
         elif not os.path.exists(csvFolderName):
@@ -67,7 +67,7 @@ class DataManager:
     # If collection with same name exists, then come up with a way to have 
     # past and present data to allow for data analysis
     @staticmethod
-    def saveCollectionsToCsvFolder(csvFolderName : str, collections : List[Collection]) -> None:
+    def save_collections_to_csv_folder(csvFolderName : str, collections : List[Collection]) -> None:
         if not isinstance(csvFolderName, str):
             raise TypeError("Filename must be a string")
         elif not isinstance(collections, list):
@@ -103,7 +103,7 @@ class DataManager:
     @return: The collection loaded from the json file
     """
     @staticmethod
-    def loadCollectionFromJson(filePath : str) -> Collection:
+    def load_collection_from_json(filePath : str) -> Collection:
         if not isinstance(filePath, str):
             raise TypeError("Filename must be a string")
         elif not filePath.endswith(".json"):
@@ -114,7 +114,7 @@ class DataManager:
         with open(filePath, "r") as file:
             collectionDict = json.load(file)
             
-        return DataManager.convertDicitonaryToCollection(collectionDict)
+        return DataManager.convert_dictionary_to_collection(collectionDict)
     
     """
     Saves a collection to a json file within a directory(folder)
@@ -123,7 +123,7 @@ class DataManager:
     @param collection: The collection to be saved
     """
     @staticmethod
-    def saveCollectionToJson(directoryPath : str, collection : Collection) -> None:
+    def save_collection_to_json(directoryPath : str, collection : Collection) -> None:
         if not isinstance(directoryPath, str):
             raise TypeError("Directory path must be a string")
         elif not isinstance(collection, Collection):
@@ -131,7 +131,7 @@ class DataManager:
         elif not os.path.exists(directoryPath):
             os.mkdir(directoryPath)
         
-        collectionDict = DataManager.convertCollectionToDictionary(collection)
+        collectionDict = DataManager.convert_collection_to_dictionary(collection)
         with open(os.path.join(directoryPath, collection.name + ".json"), "w") as file:
             json.dump(collectionDict, file)
 
@@ -154,7 +154,7 @@ class DataManager:
     }
     """
     @staticmethod
-    def convertDicitonaryToCollection(dictionary: Dict[str, Any]) -> Collection:
+    def convert_dictionary_to_collection(dictionary: Dict[str, Any]) -> Collection:
         if not isinstance(dictionary, dict):
             raise TypeError("Dictionary must be a dictionary")
         elif "name" not in dictionary:
@@ -183,7 +183,7 @@ class DataManager:
         return collection
     
     @staticmethod
-    def convertCollectionToDictionary(collection: Collection) -> Dict[str, Any]:
+    def convert_collection_to_dictionary(collection: Collection) -> Dict[str, Any]:
         if not isinstance(collection, Collection):
             raise TypeError("Collection must be a Collection")
 

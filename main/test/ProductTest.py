@@ -7,116 +7,116 @@ class ProductTest(unittest.TestCase):
         self.testProduct : Product = Product("ProductID", "TestName", 100.0, "https://www.test.co.uk/", 4.5, "Description", [])
     
     # Product ID Tests
-    def testSettingValidProductID(self) -> None:
+    def test_setting_valid_product_id(self) -> None:
         self.testProduct.productID = "ProductID2"
         self.assertEqual(self.testProduct.productID, "ProductID2")
     
-    def testSettingInvalidProductIDType(self) -> None:
+    def test_setting_invalid_product_id_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.productID = 2
     
-    def testSettingEmptyProductID(self) -> None:
+    def test_setting_empty_product_id(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.productID = ""
 
     # Name Tests
-    def testSettingValidName(self) -> None:
+    def test_setting_valid_name(self) -> None:
         self.testProduct.name = "iPhone"
         self.assertEqual(self.testProduct.name, "iPhone")
     
-    def testSettingInvalidNameType(self) -> None:
+    def test_setting_invalid_name_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.name = 25
     
-    def testSettingEmptyName(self) -> None:
+    def test_setting_empty_name(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.name = ""
 
     # Price Tests
-    def testSettingValidPrice(self) -> None:
+    def test_setting_valid_price(self) -> None:
         self.testProduct.price = 1000.0
         self.assertEqual(self.testProduct.price, 1000.0)
     
-    def testSettingInvalidPriceType(self) -> None:
+    def test_setting_invalid_price_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.price = "1000"
     
-    def testSettingInvalidPriceValue(self) -> None:
+    def test_setting_invalid_price_value(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.price = -1000.0
 
     # Url Tests
-    def testSettingValidUrl(self) -> None:
+    def test_setting_valid_url(self) -> None:
         self.testProduct.url = "https://www.amazon.co.uk/"
         self.assertEqual(self.testProduct.url, "https://www.amazon.co.uk/")
     
-    def testSettingInvalidUrlType(self) -> None:
+    def test_setting_invalid_url_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.url = 25
     
-    def testSettingEmptyUrl(self) -> None:
+    def test_setting_empty_url(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.url = ""
     
-    def testSettingInvalidUrl(self) -> None:
+    def test_setting_invalid_url(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.url = "amazon"
     
     # Rating Tests
-    def testSettingValidRating(self) -> None:
+    def test_setting_valid_rating(self) -> None:
         self.testProduct.rating = 5.0
         self.assertEqual(self.testProduct.rating, 5.0)
     
-    def testSettingInvalidRatingType(self) -> None:
+    def test_setting_invalid_rating_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.rating = "5"
     
-    def testSettingInvalidRatingValue(self) -> None:
+    def test_setting_invalid_rating_value(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.rating = 6.0
     
     # Description Tests
-    def testSettingValidDescription(self) -> None:
+    def test_setting_valid_description(self) -> None:
         self.testProduct.description = "Description2"
         self.assertEqual(self.testProduct.description, "Description2")
     
-    def testSettingInvalidDescriptionType(self) -> None:
+    def test_setting_invalid_description_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.description = 25
     
     # Reviews Tests
-    def testSettingValidReviews(self) -> None:
+    def test_setting_valid_reviews(self) -> None:
         self.testProduct.reviews = ["review1", "review2"]
         self.assertEqual(self.testProduct.reviews, ["review1", "review2"])
     
-    def testSettingInvalidReviewsType(self) -> None:
+    def test_setting_invalid_reviews_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.reviews = "review1"
     
     # Adding Review Tests
-    def testAddingValidReview(self) -> None:
+    def test_adding_valid_reviews(self) -> None:
         self.testProduct.addReview("review1")
         self.assertEqual(self.testProduct.reviews, ["review1"])
     
-    def testAddingInvalidReviewType(self) -> None:
+    def test_adding_invalid_review_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.addReview(25)
     
-    def testAddingEmptyReview(self) -> None:
+    def test_adding_empty_review(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.addReview("")
     
     # Removing Review Tests
-    def testRemovingValidReview(self) -> None:
+    def test_removing_valid_review(self) -> None:
         self.testProduct.addReview("review1")
         self.testProduct.removeReview("review1")
         self.assertEqual(self.testProduct.reviews, [])
     
-    def testRemovingInvalidReviewType(self) -> None:
+    def test_removing_invalid_review_type(self) -> None:
         with self.assertRaises(TypeError):
             self.testProduct.removeReview(25)
     
-    def testRemovingEmptyReview(self) -> None:
+    def test_removing_empty_review(self) -> None:
         with self.assertRaises(ValueError):
             self.testProduct.removeReview("")
 

@@ -9,46 +9,46 @@ class CollectionTest(unittest.TestCase):
         self.collection : Collection = Collection("TestName", [self.testProduct])
 
     # Name Tests
-    def testSettingValidName(self) -> None:
+    def test_setting_valid_name(self) -> None:
         self.collection.name = "NewName"
         self.assertEqual(self.collection.name, "NewName")
     
-    def testSettingInvalidNameType(self) -> None:
+    def test_setting_invalid_name_type(self) -> None:
         with self.assertRaises(TypeError):
             self.collection.name = 123
 
-    def testSettingEmptyName(self) -> None:
+    def test_setting_empty_name(self) -> None:
         with self.assertRaises(ValueError):
             self.collection.name = ""
     
     # Products Tests
-    def testSettingValidProducts(self) -> None:
+    def test_setting_valid_products(self) -> None:
         self.collection.products = [self.newProduct]
         self.assertEqual(self.collection.products, [self.newProduct])
     
-    def testSettingInvalidProductsType(self) -> None:
+    def test_setting_invalid_products_type(self) -> None:
         with self.assertRaises(TypeError):
             self.collection.products = "Not a list"
     
     # Adding Products Tests
-    def testAddingValidProduct(self) -> None:
+    def test_adding_valid_product(self) -> None:
         self.collection.addProduct(self.newProduct)
         self.assertEqual(self.collection.products, [self.testProduct, self.newProduct])
     
-    def testAddingInvalidProductType(self) -> None:
+    def test_adding_invalid_product_type(self) -> None:
         with self.assertRaises(TypeError):
             self.collection.addProduct("Not a product")
     
     # Removing Products Tests
-    def testRemovingValidProduct(self) -> None:
+    def test_removing_valid_products(self) -> None:
         self.collection.removeProduct(self.testProduct)
         self.assertEqual(self.collection.products, [])
     
-    def testRemovingInvalidProductType(self) -> None:
+    def test_removing_invalid_product_type(self) -> None:
         with self.assertRaises(TypeError):
             self.collection.removeProduct("Not a product")
     
-    def testRemovingProductNotInCollection(self) -> None:
+    def test_removing_product_not_in_collections(self) -> None:
         with self.assertRaises(ValueError):
             self.collection.removeProduct(self.newProduct)
     

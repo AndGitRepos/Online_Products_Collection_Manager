@@ -1,27 +1,27 @@
 from dash import Input, Output, State, ALL, MATCH, callback_context, no_update, html
 from dash.exceptions import PreventUpdate
-import dash
 import time
 import threading
 import json
 import asyncio
 import pandas as pd
 import plotly.express as px
+from typing import List
 from src.WebScraper import WebScraper
 from src.DataManager import DataManager
 from src.Collection import Collection
 
 # Global variables
-collections = []
-search_result = None
-is_searching = False
-search_start_time = None
-last_scrape_duration = None
+collections : List[Collection] = []
+search_result : Collection = None
+is_searching : bool = False
+search_start_time : float = None
+last_scrape_duration : float = None
 
-def load_collections():
+def load_collections() -> None:
     global collections
     try:
-        collections = DataManager.loadCollectionsFromCsvFolder("CsvFolder")
+        collections = DataManager.load_collections_from_csv_folder("CsvFolder")
         print(f"Loaded {len(collections)} collections from CsvFolder")
     except FileNotFoundError:
         print("CsvFolder not found. Starting with empty collections.")
@@ -30,18 +30,18 @@ def load_collections():
         print(f"Error loading collections: {str(e)}")
         collections = []
 
-def background_search(product_name):
+def background_search(product_name) -> None:
     global search_result, is_searching, search_start_time, last_scrape_duration
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     search_start_time = time.time()
-    search_result = loop.run_until_complete(WebScraper.searchForProducts(product_name))
+    search_result = loop.run_until_complete(WebScraper.search_for_products(product_name))
     last_scrape_duration = time.time() - search_start_time
     is_searching = False
     if search_result:
-        DataManager.saveCollectionsToCsvFolder("CsvFolder", [search_result])
+        DataManager.save_collections_to_csv_folder("CsvFolder", [search_result])
 
-def create_notification(message, color):
+def create_notification(message : str, color : int):
     return html.Div([
         html.Div(style={"width": "9px", "height": "56px", "left": "0px", "top": "0px", "position": "absolute", "background": color, "borderRadius": "5px"}),
         html.Div("Notification", style={"left": "19px", "top": "5px", "position": "absolute", "color": "white", "fontSize": "13px", "fontWeight": "700"}),
@@ -51,13 +51,13 @@ def create_notification(message, color):
 def display_collections():
     return [create_collection_item(collection.name, len(collection.products), i) for i, collection in enumerate(collections)]
 
-def format_time(seconds):
+def format_time(seconds : float) -> str:
     return f"{seconds:.2f}" if seconds is not None else "0.00"
 
-def truncate_name(name, max_length=25):
+def truncate_name(name : str, max_length : int = 25) -> str:
     return (name[:max_length] + '...') if len(name) > max_length else name
 
-def create_collection_item(name, total_products, index):
+def create_collection_item(name : str, total_products : int, index : int):
     return html.Div([
         html.Div([
             html.Div([
@@ -79,13 +79,14 @@ def create_collection_item(name, total_products, index):
         "cursor": "pointer"
     })
 
-def register_callbacks(app):
+def register_callbacks(app) -> None:
     @app.callback(
         Output('url', 'pathname'),
         Input('url', 'pathname')
     )
-    def update_url(pathname):
+    def update_url(pathname : str):
         return pathname
+    
     @app.callback(
         Output('collection-display', 'children'),
         Output('search-progress', 'disabled'),
@@ -263,7 +264,7 @@ def register_callbacks(app):
         
         if button_index < len(collections):
             collection = collections[button_index]
-            collection_dict = DataManager.convertCollectionToDictionary(collection)
+            collection_dict = DataManager.convert_collection_to_dictionary(collection)
             return dict(content=json.dumps(collection_dict, indent=2), filename=f"{collection.name}.json")
         
         raise PreventUpdate

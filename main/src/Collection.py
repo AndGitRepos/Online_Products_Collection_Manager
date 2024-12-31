@@ -30,13 +30,13 @@ class Collection:
         else:
             self._products = products
     
-    def addProduct(self, product : Product) -> None:
+    def add_product(self, product : Product) -> None:
         if not isinstance(product, Product):
             raise TypeError("Product must be a Product")
         else:
             self._products.append(product)
     
-    def removeProduct(self, product : Product) -> None:
+    def remove_product(self, product : Product) -> None:
         if not isinstance(product, Product):
             raise TypeError("Product must be a Product")
         elif product not in self._products:

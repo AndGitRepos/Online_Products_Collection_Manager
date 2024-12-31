@@ -94,7 +94,7 @@ class WebScraper:
     Given a page URL, this method will extract the large JSON structure that it stored within a script tag
     """
     @staticmethod
-    async def extractScriptJsonData(
+    async def extract_script_json_data(
         client: RetryClient, 
         pageUrl: str, 
         referer : str, 
@@ -126,7 +126,7 @@ class WebScraper:
                 return None
             
     @staticmethod
-    def createRetryClient(session):
+    def create_retry_client(session):
         retry_options = ExponentialRetry(
             attempts=5,
             start_timeout=1,
@@ -144,9 +144,9 @@ class WebScraper:
     
     """
     @staticmethod
-    async def searchForProducts(productName: str) -> Collection:
+    async def search_for_products(productName: str) -> Collection:
         async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar()) as session:
-            retryClient : RetryClient = WebScraper.createRetryClient(session)
+            retryClient : RetryClient = WebScraper.create_retry_client(session)
             
             # Check if search is allowed by robots.txt
             searchPath : str = f"/search/{productName}"
@@ -155,7 +155,7 @@ class WebScraper:
                 return None
 
             # Search for productName and gather all pages results
-            searchResultsData: Dict[str, Any] = await WebScraper.fetchAllSearchResults(
+            searchResultsData: Dict[str, Any] = await WebScraper.fetch_all_search_results(
                 retryClient, searchPath, productName
             )
             if not searchResultsData:
@@ -165,7 +165,7 @@ class WebScraper:
             # From the search results construct each products page URL 
             # and save the total number of reviews each product has
             numOfResults : int = searchResultsData["redux"]["product"]["numberOfResults"]
-            productPageUrlsAndNumOfReviews: List[tuple] = WebScraper.extractProductUrlsAndNumOfReviews(
+            productPageUrlsAndNumOfReviews: List[tuple] = WebScraper.extract_product_urls_and_num_of_reviews(
                 searchResultsData["redux"]["product"]["products"], 
                 productName, 
                 numOfResults
@@ -175,7 +175,7 @@ class WebScraper:
             extractedProductData: List[Product] = []
             semaphore = asyncio.Semaphore(WebScraper.MAX_CONCURRENT_REQUESTS)
             tasks = [
-                WebScraper.parseProductPage(
+                WebScraper.parse_product_page(
                     retryClient, 
                     productUrlAndNumOfReviews[0], 
                     productUrlAndNumOfReviews[1], 
@@ -199,7 +199,7 @@ class WebScraper:
     and combine the JSON data structures for each page then return the combined JSON structure
     """
     @staticmethod
-    async def fetchAllSearchResults(
+    async def fetch_all_search_results(
         retryClient: RetryClient, 
         searchPath : str, 
         productName : str
@@ -207,7 +207,7 @@ class WebScraper:
         # Constructing search URL for first page so that we can retrieve its JSON data 
         # structure to gain information on the total number of search results pages
         searchURL : str = f"{WebScraper.BASE_URL}{searchPath}/opt/page:1/?clickOrigin=searchbar:search:term:{productName}"
-        searchResultsData: Dict[str, Any] = await WebScraper.extractScriptJsonData(
+        searchResultsData: Dict[str, Any] = await WebScraper.extract_script_json_data(
             retryClient, searchURL, WebScraper.BASE_URL, "window.App="
         )
         if not searchResultsData:
@@ -218,7 +218,7 @@ class WebScraper:
         tasks = []
         for page in range(2, min(7, numOfPages + 1)):
             searchURL : str = f"{WebScraper.BASE_URL}{searchPath}/opt/page:{page}/"
-            tasks.append(WebScraper.extractScriptJsonData(retryClient, searchURL, WebScraper.BASE_URL, "window.App="))
+            tasks.append(WebScraper.extract_script_json_data(retryClient, searchURL, WebScraper.BASE_URL, "window.App="))
 
         # Combining the JSON data structures into one
         results = await asyncio.gather(*tasks)
@@ -232,7 +232,7 @@ class WebScraper:
     and extracts the total number of reviews for each product
     """
     @staticmethod
-    def extractProductUrlsAndNumOfReviews(
+    def extract_product_urls_and_num_of_reviews(
         searchResultsProductsData: List[Dict[str, Any]], 
         productName : str, 
         numberOfResults : int
@@ -250,7 +250,7 @@ class WebScraper:
     Parses a given product page, extracting data to instantiate a Product object
     """
     @staticmethod
-    async def parseProductPage(
+    async def parse_product_page(
         client: RetryClient, 
         productUrl: str, 
         numOfReviews : int, 
@@ -265,7 +265,7 @@ class WebScraper:
                 return None
             # Extract the JSON data structure containing the product data
             await asyncio.sleep(random.uniform(WebScraper.MIN_SLEEP_TIME, WebScraper.MAX_SLEEP_TIME))
-            productData: Dict[str, Any] = await WebScraper.extractScriptJsonData(
+            productData: Dict[str, Any] = await WebScraper.extract_script_json_data(
                 client, productUrl, referer, "window.__data="
             )
             if not productData:
@@ -280,7 +280,7 @@ class WebScraper:
             descriptionSoup : BeautifulSoup = BeautifulSoup(dirtyDescription, 'html.parser')
             clean_description : str = descriptionSoup.get_text(separator=' ', strip=True)
             # Retrieve all the reviews for the product
-            allReviews: List[str] = await WebScraper.getReviews(client, productUrl, numOfReviews)
+            allReviews: List[str] = await WebScraper.get_reviews(client, productUrl, numOfReviews)
 
             print(f"Successfully retrieved data for product {productID}")
             return Product(productID, productName, price, productUrl, rating, clean_description, allReviews)
@@ -289,7 +289,7 @@ class WebScraper:
     Extracts the product number from the URL
     """
     @staticmethod
-    def getProductNumber(url: str) -> str:
+    def get_product_number(url: str) -> str:
         match = re.search(r'/product/(\d+)', url)
         return match.group(1) if match else None
 
@@ -299,10 +299,10 @@ class WebScraper:
     You can only retrieve a maximum of 100 reviews at a time.
     """
     @staticmethod
-    async def getReviews(client: RetryClient, productUrl: str, numOfReviews : int = 10) -> List[str]:
+    async def get_reviews(client: RetryClient, productUrl: str, numOfReviews : int = 10) -> List[str]:
         if numOfReviews < 1:
             return []
-        productNumber : str = WebScraper.getProductNumber(productUrl)
+        productNumber : str = WebScraper.get_product_number(productUrl)
         if not productNumber:
             print("Could not extract product number from URL")
             return None
