@@ -24,9 +24,10 @@ def create_collections_layout():
 
         # Main content
         html.Div([
-            # Products grid
+            # Products grid or product details
             html.Div([
-                html.Div(id='products-grid', className="products-grid")
+                html.Div(id='products-grid', className="products-grid"),
+                html.Div(id='product-details', style={'display': 'none'})
             ], className="products-section"),
 
             # Graph container
@@ -38,6 +39,11 @@ def create_collections_layout():
         # Notification container
         html.Div(id="notification-container", style={"position": "absolute", "top": "11px", "right": "20px", "zIndex": "1000"}),
 
+        # Store for selected product
+        dcc.Store(id='selected-collection', data=None),
+        dcc.Store(id='selected-product', data=None),
+        dcc.Store(id='product-clicked', data=None),
+        dcc.Store(id='view-state', data='grid'),
         dcc.Interval(id='notification-interval', interval=1000, n_intervals=0),
         dcc.Interval(id='initial-refresh', interval=1, max_intervals=1),
         # Hidden collection display for consistency

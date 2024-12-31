@@ -8,11 +8,11 @@ def create_main_layout():
         # Hamburger menu
         html.Div([
             html.Div([
-                html.Div(style={"width": "27px", "height": "0px", "border": "1.50px white solid", "margin": "4.5px 0"}),
-                html.Div(style={"width": "27px", "height": "0px", "border": "1.50px white solid", "margin": "4.5px 0"}),
-                html.Div(style={"width": "27px", "height": "0px", "border": "1.50px white solid", "margin": "4.5px 0"}),
-            ], style={"width": "36px", "height": "36px", "padding": "9px 4.5px", "display": "flex", "flexDirection": "column", "justifyContent": "center", "alignItems": "center"})
-        ], id='sidebar-toggle', style={"width": "36px", "height": "36px", "left": "11px", "top": "9px", "position": "absolute", "cursor": "pointer"}),
+                html.Div(className="hamburger-line"),
+                html.Div(className="hamburger-line"),
+                html.Div(className="hamburger-line"),
+            ], className="hamburger-menu")
+        ], id='sidebar-toggle', className="menu-container"),
 
         # Search container
         html.Div([
@@ -59,4 +59,4 @@ def create_main_layout():
         dcc.Interval(id='initial-refresh', interval=1, max_intervals=1),
         # Hidden elements for collections page
         html.Div(id='collections-grid', style={'display': 'none'}),
-    ], style={"width": "1000px", "height": "650px", "position": "relative", "margin": "0 auto"})
+    ], className="main-page")

@@ -14,9 +14,9 @@ body {
     padding: 0;
 }
 
-.main-container, .collections-page {
+.collections-page, .main-page {
     width: 1000px;
-    height: 650px;
+    height: 95vh;
     margin: 0 auto;
     position: relative;
 }
@@ -140,7 +140,7 @@ body {
 
 /* Responsive design */
 @media screen and (max-width: 1000px) {
-    .main-container, .collections-page {
+    .collections-page, .main-page {
         width: 100%;
         height: auto;
     }

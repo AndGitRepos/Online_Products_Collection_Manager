@@ -81,6 +81,12 @@ def create_collection_item(name, total_products, index):
 
 def register_callbacks(app):
     @app.callback(
+        Output('url', 'pathname'),
+        Input('url', 'pathname')
+    )
+    def update_url(pathname):
+        return pathname
+    @app.callback(
         Output('collection-display', 'children'),
         Output('search-progress', 'disabled'),
         Output('notification-container', 'children'),
@@ -96,22 +102,19 @@ def register_callbacks(app):
         Input('notification-interval', 'n_intervals'),
         State('product-input', 'value'),
         State('notification-container', 'children'),
-        prevent_initial_call=True
     )
     def handle_main_page_updates(pathname, refresh_clicks, search_clicks, search_intervals, 
                                 initial_refresh, notification_interval, product_name, current_notifications):
         if pathname != '/':
-            raise PreventUpdate
-        ctx = callback_context
-        if not ctx.triggered:
-            raise PreventUpdate
+            return [no_update] * 7
 
-        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        ctx = callback_context
+        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else 'no_trigger'
 
         # Initialize outputs
         outputs = [no_update] * 7
 
-        if trigger_id in ['initial-refresh', 'refresh-button']:
+        if trigger_id in ['initial-refresh', 'refresh-button', 'url']:
             load_collections()
             outputs = [
                 display_collections(),
@@ -264,36 +267,112 @@ def register_callbacks(app):
             return dict(content=json.dumps(collection_dict, indent=2), filename=f"{collection.name}.json")
         
         raise PreventUpdate
+    
+    @app.callback(
+        Output('collections-grid', 'children', allow_duplicate=True),
+        Output('selected-collection', 'data', allow_duplicate=True),
+        Input('url', 'pathname'),
+        Input('refresh-button', 'n_clicks'),
+        Input('initial-refresh', 'n_intervals'),
+        prevent_initial_call=True
+    )
+    def update_collections_grid(pathname, refresh_clicks, initial_refresh):
+        if pathname != '/collections':
+            raise PreventUpdate
+        
+        load_collections()
+        collections_grid = [
+            html.Div(collection.name, 
+                    className="collection-item",
+                    id={'type': 'collection-item', 'index': i})
+            for i, collection in enumerate(collections)
+        ]
+        return collections_grid, None
 
     @app.callback(
         Output('products-grid', 'children'),
-        Input({"type": "collection-item", "index": ALL}, "n_clicks"),
-        State({"type": "collection-item", "index": ALL}, "id"),
-        State('url', 'pathname')
+        Output('products-grid', 'style'),
+        Output('product-details', 'style'),
+        Output('selected-product', 'data'),
+        Input('selected-collection', 'data'),
+        Input({'type': 'collection-item', 'index': ALL}, 'n_clicks'),
+        State({'type': 'collection-item', 'index': ALL}, 'id'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
     )
-    def update_products_grid(n_clicks, ids, pathname):
+    def update_products_grid(selected_collection, n_clicks, ids, pathname):
+        if pathname != '/collections':
+            raise PreventUpdate
+        
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        
+        trigger = ctx.triggered[0]['prop_id'].split('.')[0]
+        
+        if trigger == 'selected-collection':
+            return [], {'display': 'grid'}, {'display': 'none'}, None
+        
+        if 'index' in trigger:
+            clicked_index = json.loads(trigger)['index']
+            if clicked_index < len(collections):
+                selected_collection = collections[clicked_index]
+                products = selected_collection.products
+                return [
+                    html.Div(
+                        truncate_name(product.name),
+                        className="product-item",
+                        id={'type': 'product-item', 'index': i},
+                        title=product.name
+                    )
+                    for i, product in enumerate(products)
+                ], {'display': 'grid'}, {'display': 'none'}, selected_collection.name
+        
+        return [], {'display': 'grid'}, {'display': 'none'}, None
+
+    @app.callback(
+        Output('products-grid', 'style', allow_duplicate=True),
+        Output('product-details', 'style', allow_duplicate=True),
+        Output('product-details', 'children'),
+        Input({'type': 'product-item', 'index': ALL}, 'n_clicks'),
+        State({'type': 'product-item', 'index': ALL}, 'id'),
+        State('selected-product', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def show_product_details(n_clicks, ids, selected_collection_name, pathname):
         if pathname != '/collections':
             raise PreventUpdate
         ctx = callback_context
         if not ctx.triggered:
             raise PreventUpdate
+
+        trigger = ctx.triggered[0]['prop_id'].split('.')[0]
         
-        clicked_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        clicked_index = json.loads(clicked_id)['index']
+        if 'index' in trigger:
+            clicked_index = json.loads(trigger)['index']
+            selected_collection = next((c for c in collections if c.name == selected_collection_name), None)
+            if selected_collection and clicked_index < len(selected_collection.products):
+                product = selected_collection.products[clicked_index]
+                return {'display': 'none'}, {'display': 'block'}, [
+                    html.H3(product.name),
+                    html.P(f"Price: £{product.price}"),
+                    html.P(f"URL: {product.url}"),
+                    html.Button("Back to Products", id="back-to-products", n_clicks=0)
+                ]
         
-        if clicked_index < len(collections):
-            selected_collection = collections[clicked_index]
-            products = selected_collection.products
-            return [
-                html.Div(truncate_name(product.name), 
-                         style={"color": "white", "fontSize": "15px", "fontWeight": "700",
-                                "display": "flex", "alignItems": "center", "justifyContent": "center",
-                                "background": "#393E46", "borderRadius": "10px", "height": "70px"},
-                         className="product-item",
-                         title=product.name)
-                for product in products
-            ]
-        return []
+        return no_update, no_update, no_update
+
+    @app.callback(
+        Output('products-grid', 'style', allow_duplicate=True),
+        Output('product-details', 'style', allow_duplicate=True),
+        Input('back-to-products', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def back_to_products(n_clicks):
+        if n_clicks > 0:
+            return {'display': 'grid'}, {'display': 'none'}
+        raise PreventUpdate
 
     @app.callback(
         Output("sidebar", "style"),
