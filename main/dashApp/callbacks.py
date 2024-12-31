@@ -6,6 +6,10 @@ import json
 import asyncio
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+import re
+import random
+from collections import Counter
 from typing import List
 from src.WebScraper import WebScraper
 from src.DataManager import DataManager
@@ -78,6 +82,12 @@ def create_collection_item(name : str, total_products : int, index : int):
         "marginBottom": "10px",
         "cursor": "pointer"
     })
+
+def generate_word_cloud_data(text, max_words=100):
+    words = re.findall(r'\w+', text.lower())
+    word_counts = Counter(words)
+    max_count = max(word_counts.values())
+    return [{'text': word, 'value': count / max_count} for word, count in word_counts.most_common(max_words)]
 
 def register_callbacks(app) -> None:
     @app.callback(
@@ -389,44 +399,133 @@ def register_callbacks(app) -> None:
         return {"left": "-250px"}
     
     @app.callback(
-        Output('product-graph', 'figure'),
-        Input({'type': 'collection-item', 'index': ALL}, 'n_clicks'),
-        State({'type': 'collection-item', 'index': ALL}, 'id'),
-        State('url', 'pathname')
+        [Output('product-graph', 'figure'),
+        Output('filter-dropdown', 'options'),
+        Output('filter-dropdown', 'value')],
+        [Input('graph-type', 'value'),
+        Input('filter-dropdown', 'value'),
+        Input({'type': 'collection-item', 'index': ALL}, 'n_clicks')],
+        [State({'type': 'collection-item', 'index': ALL}, 'id'),
+        State('selected-collection', 'data'),
+        State('url', 'pathname')]
     )
-    def update_graph(n_clicks, ids, pathname):
+    def update_graph(graph_type, filter_value, n_clicks, ids, selected_collection_data, pathname):
+        print(f"update_graph called with graph_type: {graph_type}, pathname: {pathname}")
         if pathname != '/collections':
+            print("Not on collections page, preventing update")
             raise PreventUpdate
         ctx = callback_context
         if not ctx.triggered:
+            print("No trigger, preventing update")
             raise PreventUpdate
         
         try:
-            clicked_id = ctx.triggered[0]['prop_id'].split('.')[0]
-            clicked_index = json.loads(clicked_id)['index']
+            trigger = ctx.triggered[0]['prop_id'].split('.')[0]
+            print(f"Trigger: {trigger}")
             
-            if clicked_index < len(collections):
-                selected_collection = collections[clicked_index]
+            selected_collection = None
+            if trigger == 'graph-type':
+                print(f"Graph type changed to {graph_type}")
+                if selected_collection_data is not None:
+                    print(f"Using stored collection: {selected_collection_data}")
+                    selected_collection = next((c for c in collections if c.name == selected_collection_data), None)
+                else:
+                    print("No collection selected, cannot update graph")
+                    return px.bar(title="Select a collection to view product data"), [], []
+            elif 'index' in trigger:
+                clicked_index = json.loads(trigger)['index']
+                print(f"Collection clicked, index: {clicked_index}")
+                if clicked_index < len(collections):
+                    selected_collection = collections[clicked_index]
+                    print(f"Selected collection: {selected_collection.name}")
+            else:
+                print(f"Trigger not recognized: {trigger}")
+                return px.bar(title="Select a collection to view product data"), [], []
+            
+            if selected_collection:
                 products = selected_collection.products
+                print(f"Number of products: {len(products)}")
 
-                # Create a DataFrame from the products
                 df = pd.DataFrame([
-                    {'name': truncate_name(product.name), 'price': product.price}
+                    {'Name': product.name, 'Price': product.price, 'Rating': product.rating}
                     for product in products
                 ])
 
-                # Create a bar chart
-                fig = px.bar(df, x='name', y='price', title=f'Product Prices in {selected_collection.name}')
+                if filter_value:
+                    df = df[df['Name'].isin(filter_value)]
+
+                print(f"Creating {graph_type} graph")
+                if graph_type == 'bar':
+                    fig = px.bar(df, x='Name', y='Price', title=f'Product Prices in {selected_collection.name}')
+                elif graph_type == 'line':
+                    fig = px.line(df, x='Name', y='Price', title=f'Product Prices in {selected_collection.name}')
+                elif graph_type == 'wordcloud':
+                    text = ' '.join([review for product in products for review in product.reviews])
+                    word_cloud_data = generate_word_cloud_data(text)
+                    x = [random.uniform(0, 1) for _ in word_cloud_data]
+                    y = [random.uniform(0, 1) for _ in word_cloud_data]
+                    sizes = [item['value'] * 50 for item in word_cloud_data]
+                    texts = [item['text'] for item in word_cloud_data]
+                    colors = [item['value'] for item in word_cloud_data]
+                    
+                    fig = go.Figure(data=[go.Scatter(
+                        x=x, y=y, mode='text',
+                        text=texts,
+                        textfont=dict(size=sizes),
+                        marker=dict(color=colors, colorscale='Viridis', showscale=True),
+                        hoverinfo='text'
+                    )])
+                    fig.update_layout(
+                        title=f'Review Word Cloud for {selected_collection.name}',
+                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+                    )
+                elif graph_type == 'spreadsheet':
+                    fig = go.Figure(data=[go.Table(
+                        header=dict(values=list(df.columns),
+                                    fill_color='paleturquoise',
+                                    align='left'),
+                        cells=dict(values=[df[col] for col in df.columns],
+                                fill_color='lavender',
+                                align='left'))
+                    ])
+                    fig.update_layout(title=f'Spreadsheet View: {selected_collection.name}')
+
                 fig.update_layout(
-                    xaxis_title="Product Name",
-                    yaxis_title="Price (£)",
                     plot_bgcolor='rgba(0,0,0,0)',
                     paper_bgcolor='rgba(0,0,0,0)',
                     font_color='white'
                 )
-                return fig
+
+                filter_options = [{'label': name, 'value': name} for name in df['Name']]
+                print("Returning updated graph and filter options")
+                return fig, filter_options, filter_value if filter_value else []
+            else:
+                print("No collection selected")
+                return px.bar(title="Select a collection to view product data"), [], []
+
         except Exception as e:
             print(f"Error in update_graph: {str(e)}")
+            import traceback
+            print(traceback.format_exc())
         
-        # If no collection is selected or an error occurred, return an empty figure
-        return px.bar(title="Select a collection to view product prices")
+        print("Returning default empty graph")
+        return px.bar(title="Select a collection to view product data"), [], []
+    
+    @app.callback(
+        Output('selected-collection', 'data'),
+        [Input({'type': 'collection-item', 'index': ALL}, 'n_clicks')],
+        [State({'type': 'collection-item', 'index': ALL}, 'id')]
+    )
+    def store_selected_collection(n_clicks, ids):
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        
+        trigger = ctx.triggered[0]['prop_id'].split('.')[0]
+        if 'index' in trigger:
+            clicked_index = json.loads(trigger)['index']
+            if clicked_index < len(collections):
+                return collections[clicked_index].name
+        
+        return None

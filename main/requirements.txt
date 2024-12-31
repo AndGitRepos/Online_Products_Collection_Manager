@@ -7,3 +7,6 @@ dash-bootstrap-components
 dash-extensions
 pandas
 plotly
+wordcloud
+matplotlib
+pillow

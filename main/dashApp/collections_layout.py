@@ -24,23 +24,41 @@ def create_collections_layout():
 
         # Main content
         html.Div([
-            # Products grid or product details
+            # Products grid or product details (existing code)
             html.Div([
                 html.Div(id='products-grid', className="products-grid"),
                 html.Div(id='product-details', style={'display': 'none'})
             ], className="products-section"),
 
-            # Graph container
+            # Graph container (moved up)
             html.Div([
-                dcc.Graph(id='product-graph')
+                dcc.Graph(id='product-graph'),
+                html.Div(id='wordcloud-container')
             ], className="graph-container"),
+
+            # Graph controls (moved below graph)
+            html.Div([
+                dcc.Dropdown(
+                    id='graph-type',
+                    options=[
+                        {'label': 'Bar Chart', 'value': 'bar'},
+                        {'label': 'Line Plot', 'value': 'line'},
+                        {'label': 'Word Cloud', 'value': 'wordcloud'},
+                        {'label': 'Spreadsheet View', 'value': 'spreadsheet'}
+                    ],
+                    value='bar',
+                    clearable=False
+                ),
+                dcc.Dropdown(id='filter-dropdown', multi=True),
+            ], className="graph-controls"),
+
         ], className="main-content"),
         
         # Notification container
         html.Div(id="notification-container", style={"position": "absolute", "top": "11px", "right": "20px", "zIndex": "1000"}),
 
         # Store for selected product
-        dcc.Store(id='selected-collection', data=None),
+        dcc.Store(id='selected-collection', data=None, storage_type='memory'),
         dcc.Store(id='selected-product', data=None),
         dcc.Store(id='product-clicked', data=None),
         dcc.Store(id='view-state', data='grid'),

@@ -147,6 +147,23 @@
     flex-direction: column;
 }
 
+.graph-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.graph-controls .Select {
+    width: 48%;
+}
+
+#wordcloud {
+    width: 100%;
+    height: 400px;
+    background-color: white;
+}
+
+
 @media screen and (max-width: 768px) {
     .main-content {
         flex-direction: column;
