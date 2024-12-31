@@ -1,12 +1,12 @@
-from dash import Input, Output, State, ALL, MATCH, html, dcc, callback_context
-import dash_bootstrap_components as dbc
+from dash import Input, Output, State, ALL, MATCH, callback_context, no_update, html
 from dash.exceptions import PreventUpdate
-import asyncio
-import threading
+import dash
 import time
-import base64
+import threading
 import json
-from functools import wraps
+import asyncio
+import pandas as pd
+import plotly.express as px
 from src.WebScraper import WebScraper
 from src.DataManager import DataManager
 from src.Collection import Collection
@@ -15,6 +15,8 @@ from src.Collection import Collection
 collections = []
 search_result = None
 is_searching = False
+search_start_time = None
+last_scrape_duration = None
 
 def load_collections():
     global collections
@@ -28,227 +30,323 @@ def load_collections():
         print(f"Error loading collections: {str(e)}")
         collections = []
 
-load_collections()
-
 def background_search(product_name):
-    global search_result, is_searching
+    global search_result, is_searching, search_start_time, last_scrape_duration
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
+    search_start_time = time.time()
     search_result = loop.run_until_complete(WebScraper.searchForProducts(product_name))
-    loop.close()
+    last_scrape_duration = time.time() - search_start_time
     is_searching = False
     if search_result:
         DataManager.saveCollectionsToCsvFolder("CsvFolder", [search_result])
 
 def create_notification(message, color):
-    return {
-        "id": f"notification-{time.time()}",
-        "message": message,
-        "color": color,
-        "is_open": True,
-        "created_at": time.time() + 0.1  # Add a small delay
-    }
-
-def display_collections(selected_collection):
-    if not collections:
-        return html.Div("No collections to display.", className="text-center")
-    
     return html.Div([
-        html.H2("All Collections", className="mb-4 text-center", style={"color": "#66FCF1"}),
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader([
-                        dbc.RadioItems(
-                            options=[{"label": "", "value": collection.name}],
-                            value=collection.name if selected_collection == collection.name else None,
-                            id={"type": "collection-radio", "index": i},
-                            inline=True
-                        ),
-                        html.Span(collection.name, className="ms-2 fw-bold")
-                    ]),
-                    dbc.CardBody([
-                        html.Ul([html.Li(f"{product.name} - £{product.price}", className="mb-2") for product in collection.products[:5]])
-                    ])
-                ], className="h-100 mb-4")
-            ], width=12, md=6, lg=4) for i, collection in enumerate(collections)
-        ])
-    ])
+        html.Div(style={"width": "9px", "height": "56px", "left": "0px", "top": "0px", "position": "absolute", "background": color, "borderRadius": "5px"}),
+        html.Div("Notification", style={"left": "19px", "top": "5px", "position": "absolute", "color": "white", "fontSize": "13px", "fontWeight": "700"}),
+        html.Div(message, style={"left": "22px", "top": "28px", "position": "absolute", "color": "white", "fontSize": "12px", "fontWeight": "400"}),
+    ], style={"width": "177px", "height": "56px", "position": "relative", "background": "#393E46", "borderRadius": "5px", "border": "1px #00ADB5 solid", "marginBottom": "10px"}, id={"type": "notification", "index": time.time()})
+
+def display_collections():
+    return [create_collection_item(collection.name, len(collection.products), i) for i, collection in enumerate(collections)]
+
+def format_time(seconds):
+    return f"{seconds:.2f}" if seconds is not None else "0.00"
+
+def truncate_name(name, max_length=25):
+    return (name[:max_length] + '...') if len(name) > max_length else name
+
+def create_collection_item(name, total_products, index):
+    return html.Div([
+        html.Div([
+            html.Div([
+                html.Div(name, style={"color": "#EEEEEE", "fontSize": "15px", "fontWeight": "700"}),
+                html.Div(f"Total products: {total_products}", style={"color": "#EEEEEE", "fontSize": "12px", "fontWeight": "400"}),
+            ], style={"flex": "1"}),
+            html.Div("▼", className="chevron", style={"cursor": "pointer", "transition": "transform 0.3s ease"}),
+        ], className="collection-header", style={"display": "flex", "justifyContent": "space-between", "alignItems": "center"}),
+        html.Div([
+            html.H5("Products:"),
+            html.Div(id={"type": "collection-products", "index": index}),
+            html.Button("Export Collection", className="export-button", id={"type": "export-collection", "index": index})
+        ], id={"type": "collection-collapse", "index": index}, style={"display": "none"}),
+    ], className="collection-item", id={"type": "collection-item", "index": index}, style={
+        "background": "#393E46",
+        "borderRadius": "15px",
+        "padding": "12px 17px",
+        "marginBottom": "10px",
+        "cursor": "pointer"
+    })
 
 def register_callbacks(app):
-    def callback_with_error_handling(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                print(f"Error in callback: {str(e)}")
-                return create_notification(f"An error occurred: {str(e)}", "danger")
-        return wrapper
-
     @app.callback(
-        Output("collection-display", "children"),
-        Output("search-progress", "disabled"),
-        Output("notifications", "data"),
-        Output("selected-collection", "data"),
-        Input("search-button", "n_clicks"),
-        Input("search-progress", "n_intervals"),
-        Input("refresh-button", "n_clicks"),
-        Input("periodic-refresh", "n_intervals"),
-        Input("upload-json", "contents"),
-        Input({"type": "collection-radio", "index": ALL}, "value"),
-        State("product-input", "value"),
-        State("selected-collection", "data"),
-        State("upload-json", "filename"),
-        State("notifications", "data"),
+        Output('collection-display', 'children'),
+        Output('search-progress', 'disabled'),
+        Output('notification-container', 'children'),
+        Output('current-scrape-time', 'children'),
+        Output('last-scrape-duration', 'children'),
+        Output('total-collections', 'children'),
+        Output('current-scrape-products', 'children'),
+        Input('url', 'pathname'),
+        Input('refresh-button', 'n_clicks'),
+        Input('search-button', 'n_clicks'),
+        Input('search-progress', 'n_intervals'),
+        Input('initial-refresh', 'n_intervals'),
+        Input('notification-interval', 'n_intervals'),
+        State('product-input', 'value'),
+        State('notification-container', 'children'),
         prevent_initial_call=True
     )
-    @callback_with_error_handling
-    def handle_all_operations(search_clicks, search_intervals, refresh_clicks, periodic_intervals, 
-                              upload_contents, radio_values, product_name, selected_collection, upload_filename, notifications):
-        global is_searching, search_result, collections
-        
+    def handle_main_page_updates(pathname, refresh_clicks, search_clicks, search_intervals, 
+                                initial_refresh, notification_interval, product_name, current_notifications):
+        if pathname != '/':
+            raise PreventUpdate
         ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+
         trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-        new_notification = None
+        # Initialize outputs
+        outputs = [no_update] * 7
 
-        if trigger_id == 'search-button':
-            new_notification = handle_search(product_name)
+        if trigger_id in ['initial-refresh', 'refresh-button']:
+            load_collections()
+            outputs = [
+                display_collections(),
+                True,
+                create_notification("Collections refreshed", "#00ADB5"),
+                f"Current scrape time elapsed: 0 seconds",
+                f"Last scrape duration: {format_time(last_scrape_duration)} seconds",
+                f"Total Collections: {len(collections)}",
+                f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
+            ]
+
+        elif trigger_id == 'search-button' and product_name:
+            global is_searching, search_result
+            is_searching = True
+            search_result = None
+            threading.Thread(target=lambda: background_search(product_name)).start()
+            outputs[1:3] = [False, create_notification("Searching...", "#FFB507")]
+
         elif trigger_id == 'search-progress':
-            return handle_search_progress(selected_collection, notifications)
-        elif trigger_id in ['refresh-button', 'periodic-refresh']:
-            new_notification = handle_refresh()
-        elif trigger_id == 'upload-json':
-            new_notification = handle_upload(upload_contents, upload_filename)
-        elif 'collection-radio' in trigger_id:
-            selected_collection, new_notification = handle_collection_selection(radio_values, selected_collection)
+            if is_searching:
+                elapsed_time = time.time() - search_start_time if search_start_time else 0
+                outputs[1:] = [
+                    False,
+                    no_update,
+                    f"Current scrape time elapsed: {format_time(elapsed_time)} seconds",
+                    f"Last scrape duration: {format_time(last_scrape_duration)} seconds",
+                    f"Total Collections: {len(collections)}",
+                    f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
+                ]
+            elif search_result:
+                collections.append(search_result)
+                outputs = [
+                    display_collections(),
+                    True,
+                    create_notification("Search completed. New collection added.", "#00ADB5"),
+                    f"Current scrape time elapsed: {format_time(last_scrape_duration)} seconds",
+                    f"Last scrape duration: {format_time(last_scrape_duration)} seconds",
+                    f"Total Collections: {len(collections)}",
+                    f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
+                ]
 
-        if new_notification:
-            notifications.append(new_notification)
+        # Handle notifications
+        if trigger_id == 'notification-interval' and current_notifications:
+            current_time = time.time()
+            updated_notifications = [
+                notif for notif in current_notifications
+                if isinstance(notif, dict) and isinstance(notif.get('props', {}).get('id', {}), dict) and
+                current_time - notif['props']['id'].get('index', 0) < 5
+            ]
+            outputs[2] = updated_notifications
 
-        return display_collections(selected_collection), True, notifications, selected_collection
+        return tuple(outputs)
 
-    def handle_search(product_name):
-        if not product_name:
+    @app.callback(
+        Output('collections-grid', 'children'),
+        Output('notification-container', 'children', allow_duplicate=True),
+        Input('url', 'pathname'),
+        Input('refresh-button', 'n_clicks'),
+        Input('initial-refresh', 'n_intervals'),
+        Input('notification-interval', 'n_intervals'),
+        State('notification-container', 'children'),
+        prevent_initial_call=True
+    )
+    def handle_collections_page_updates(pathname, refresh_clicks, initial_refresh, notification_interval, current_notifications):
+        if pathname != '/collections':
             raise PreventUpdate
         
-        global is_searching, search_result
-        is_searching = True
-        search_result = None
-        threading.Thread(target=lambda: background_search(product_name)).start()
-        return create_notification("Searching...", "info")
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
 
-    def handle_search_progress(selected_collection, notifications):
-        global is_searching, search_result, collections
-        if is_searching:
-            return display_collections(selected_collection), False, notifications, selected_collection
+        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-        if search_result is None:
-            new_notification = create_notification("Search completed. No new collection found.", "warning")
-        else:
-            collections.append(search_result)
-            new_notification = create_notification("Search completed. New collection added and saved to CSV.", "success")
-        
-        notifications.append(new_notification)
-        return display_collections(selected_collection), True, notifications, selected_collection
-
-    def handle_refresh():
-        load_collections()
-        return create_notification("Collections refreshed from CSV folder.", "info")
-
-    def handle_upload(upload_contents, upload_filename):
-        if upload_contents is None:
-            return create_notification("No file selected for import.", "warning")
-        
-        try:
-            content_type, content_string = upload_contents.split(',')
-            decoded = base64.b64decode(content_string)
-            json_data = json.loads(decoded.decode('utf-8'))
-            imported_collection = DataManager.convertDicitonaryToCollection(json_data)
-            DataManager.saveCollectionsToCsvFolder("CsvFolder", [imported_collection])
+        if trigger_id in ['initial-refresh', 'refresh-button']:
             load_collections()
-            return create_notification(f"JSON imported from {upload_filename} and saved as CSV.", "success")
-        except Exception as e:
-            return create_notification(f"Error importing JSON: {str(e)}", "danger")
+            collections_grid = [
+                html.Div(collection.name, 
+                         className="collection-item",
+                         id={'type': 'collection-item', 'index': i})
+                for i, collection in enumerate(collections)
+            ]
+            return collections_grid, create_notification("Collections refreshed", "#00ADB5")
 
-    def handle_collection_selection(radio_values, selected_collection):
-        selected_values = [value for value in radio_values if value is not None]
-        if not selected_values:
-            return selected_collection, None
+        # Handle notifications
+        if trigger_id == 'notification-interval' and current_notifications:
+            current_time = time.time()
+            updated_notifications = [
+                notif for notif in current_notifications
+                if isinstance(notif, dict) and isinstance(notif.get('props', {}).get('id', {}), dict) and
+                current_time - notif['props']['id'].get('index', 0) < 5
+            ]
+            return no_update, updated_notifications
 
-        new_selected = selected_values[0]
-        if new_selected == selected_collection:
-            return None, create_notification("Collection deselected", "info")
-        else:
-            return new_selected, create_notification(f"Selected collection: {new_selected}", "info")
+        return no_update, no_update
+
+    @app.callback(
+        Output({"type": "collection-collapse", "index": MATCH}, "style"),
+        Output({"type": "collection-products", "index": MATCH}, "children"),
+        Output({"type": "collection-item", "index": MATCH}, "style"),
+        Input({"type": "collection-item", "index": MATCH}, "n_clicks"),
+        State({"type": "collection-collapse", "index": MATCH}, "style"),
+        State({"type": "collection-item", "index": MATCH}, "style"),
+        State({"type": "collection-item", "index": MATCH}, "id"),
+        State('url', 'pathname')
+    )
+    def toggle_collection(n_clicks, collapse_style, item_style, item_id, pathname):
+        if pathname == '/collections':
+            # For collections page, we don't need to toggle anything
+            raise PreventUpdate
+        if n_clicks:
+            try:
+                collection_index = item_id['index']
+                if collection_index < len(collections):
+                    collection = collections[collection_index]
+                    products = [
+                        html.Div([
+                            html.Div(f"{product.name} - £{product.price}", className="product-name"),
+                            html.Div(product.url, className="product-url"),
+                        ], className="product-item")
+                        for product in collection.products[:5]  # Limiting to 5 products for performance
+                    ]
+                    new_collapse_style = {"display": "block"} if collapse_style.get("display") == "none" else {"display": "none"}
+                    new_item_style = {**item_style, "background": "#00ADB5" if new_collapse_style["display"] == "block" else "#393E46"}
+                    return new_collapse_style, products, new_item_style
+            except (KeyError, ValueError, IndexError) as e:
+                print(f"Error in toggle_collection: {str(e)}")
+        return collapse_style, no_update, item_style
 
     @app.callback(
         Output("download-json", "data"),
-        Input("export-button", "n_clicks"),
-        State("selected-collection", "data"),
+        Input({"type": "export-collection", "index": ALL}, "n_clicks"),
+        State({"type": "export-collection", "index": ALL}, "id"),
         prevent_initial_call=True
     )
-    @callback_with_error_handling
-    def export_json(n_clicks, selected_collection):
-        if not selected_collection:
+    def export_collection(n_clicks, ids):
+        ctx = callback_context
+        if not ctx.triggered:
             raise PreventUpdate
         
-        selected_collection_obj = next((c for c in collections if c.name == selected_collection), None)
-        if not selected_collection_obj:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        button_index = json.loads(button_id)['index']
+        
+        # Check if the button was actually clicked
+        if n_clicks[button_index] is None or n_clicks[button_index] == 0:
             raise PreventUpdate
         
-        collection_dict = DataManager.convertCollectionToDictionary(selected_collection_obj)
-        return dict(content=json.dumps(collection_dict, indent=2), filename=f"{selected_collection}.json")
+        if button_index < len(collections):
+            collection = collections[button_index]
+            collection_dict = DataManager.convertCollectionToDictionary(collection)
+            return dict(content=json.dumps(collection_dict, indent=2), filename=f"{collection.name}.json")
+        
+        raise PreventUpdate
 
     @app.callback(
-        Output("notification-container", "children"),
-        Input("notification-interval", "n_intervals"),
-        State("notifications", "data"),
+        Output('products-grid', 'children'),
+        Input({"type": "collection-item", "index": ALL}, "n_clicks"),
+        State({"type": "collection-item", "index": ALL}, "id"),
+        State('url', 'pathname')
     )
-    def update_notifications(n, notifications):
-        if not notifications:
-            return []
+    def update_products_grid(n_clicks, ids, pathname):
+        if pathname != '/collections':
+            raise PreventUpdate
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        
+        clicked_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        clicked_index = json.loads(clicked_id)['index']
+        
+        if clicked_index < len(collections):
+            selected_collection = collections[clicked_index]
+            products = selected_collection.products
+            return [
+                html.Div(truncate_name(product.name), 
+                         style={"color": "white", "fontSize": "15px", "fontWeight": "700",
+                                "display": "flex", "alignItems": "center", "justifyContent": "center",
+                                "background": "#393E46", "borderRadius": "10px", "height": "70px"},
+                         className="product-item",
+                         title=product.name)
+                for product in products
+            ]
+        return []
 
-        current_time = time.time()
-        active_notifications = []
-        for notification in notifications:
-            age = current_time - notification["created_at"]
-            if age < 5:  # Show for 5 seconds
-                className = "notification"
-                style = {"opacity": 1, "transform": "translateY(0)"}
-            elif age < 5.5:  # Fade out for 0.5 seconds
-                className = "notification"
-                style = {"opacity": 0, "transform": "translateY(-20px)"}
+    @app.callback(
+        Output("sidebar", "style"),
+        [Input("sidebar-toggle", "n_clicks")],
+        [State("sidebar", "style")]
+    )
+    def toggle_sidebar(n, style):
+        if n:
+            if style is None or "left" not in style or style["left"] == "-250px":
+                return {"left": "0px", "transition": "left 0.3s"}
             else:
-                continue  # Remove notification
-
-            active_notifications.append(
-                dbc.Alert(
-                    notification["message"],
-                    id=notification["id"],
-                    color=notification["color"],
-                    dismissable=True,
-                    is_open=True,
-                    className=className,
-                    style=style,
-                )
-            )
-
-        return active_notifications
-
+                return {"left": "-250px", "transition": "left 0.3s"}
+        return {"left": "-250px"}
+    
     @app.callback(
-        Output("notifications", "data", allow_duplicate=True),
-        Input({"type": "notification", "index": ALL}, "is_open"),
-        State("notifications", "data"),
-        prevent_initial_call=True
+        Output('product-graph', 'figure'),
+        Input({'type': 'collection-item', 'index': ALL}, 'n_clicks'),
+        State({'type': 'collection-item', 'index': ALL}, 'id'),
+        State('url', 'pathname')
     )
-    def remove_dismissed_notifications(is_open_list, notifications):
-        if not callback_context.triggered:
+    def update_graph(n_clicks, ids, pathname):
+        if pathname != '/collections':
             raise PreventUpdate
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        
+        try:
+            clicked_id = ctx.triggered[0]['prop_id'].split('.')[0]
+            clicked_index = json.loads(clicked_id)['index']
+            
+            if clicked_index < len(collections):
+                selected_collection = collections[clicked_index]
+                products = selected_collection.products
 
-        updated_notifications = [
-            notif for notif, is_open in zip(notifications, is_open_list)
-            if is_open is None or is_open
-        ]
-        return updated_notifications
+                # Create a DataFrame from the products
+                df = pd.DataFrame([
+                    {'name': truncate_name(product.name), 'price': product.price}
+                    for product in products
+                ])
+
+                # Create a bar chart
+                fig = px.bar(df, x='name', y='price', title=f'Product Prices in {selected_collection.name}')
+                fig.update_layout(
+                    xaxis_title="Product Name",
+                    yaxis_title="Price (£)",
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    font_color='white'
+                )
+                return fig
+        except Exception as e:
+            print(f"Error in update_graph: {str(e)}")
+        
+        # If no collection is selected or an error occurred, return an empty figure
+        return px.bar(title="Select a collection to view product prices")

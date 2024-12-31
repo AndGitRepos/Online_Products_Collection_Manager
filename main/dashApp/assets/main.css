@@ -1,0 +1,155 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.search-bar {
+    width: 300px;
+    height: 50px;
+    background-color: var(--background-medium);
+    border: 1px solid var(--accent-bright);
+    border-radius: 10px;
+    color: var(--text-light);
+    padding: 0 15px;
+    font-size: 11px;
+    box-sizing: border-box;
+}
+
+.search-button, .refresh-button {
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: var(--accent-bright);
+    border: none;
+    border-radius: 5px;
+    color: var(--background-dark);
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover, .refresh-button:hover {
+    background-color: #00c2cb;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    left: 350px;
+    top: 11px;
+}
+
+.analytics-section {
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.analytics-item {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.collections-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#refresh-button {
+    background-color: var(--accent-bright);
+    color: var(--background-dark);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.collections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.collection-item {
+    background-color: var(--background-medium);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.collection-item:hover {
+    background-color: #2c3238;
+}
+
+.collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 17px;
+}
+
+.collection-info {
+    flex-grow: 1;
+}
+
+.collection-name {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.collection-total {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.collection-item .chevron {
+    transition: transform 0.3s ease;
+}
+
+.collection-item.expanded .chevron {
+    transform: rotate(180deg);
+}
+
+.collection-collapse {
+    background-color: var(--background-medium);
+    border-radius: 0 0 15px 15px;
+    padding: 15px;
+}
+
+.product-item {
+    margin-bottom: 10px;
+}
+
+.product-name {
+    font-weight: bold;
+}
+
+.product-url {
+    font-size: 12px;
+    color: var(--accent-bright);
+}
+
+.export-button {
+    background-color: var(--accent-bright);
+    color: var(--background-dark);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}

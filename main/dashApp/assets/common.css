@@ -1,0 +1,159 @@
+:root {
+    --background-dark: #222831;
+    --background-medium: #393E46;
+    --text-light: #EEEEEE;
+    --accent-bright: #00ADB5;
+    --accent-yellow: #FFB507;
+}
+
+body {
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.main-container, .collections-page {
+    width: 1000px;
+    height: 650px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.menu-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger-menu {
+    width: 27px;
+    height: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 1.5px;
+    background-color: white;
+}
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    max-width: 300px;
+}
+
+.notification-box {
+    background-color: var(--background-medium);
+    border: 1px solid var(--accent-bright);
+    border-radius: 5px;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification-stripe {
+    width: 5px;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    padding: 10px;
+    flex-grow: 1;
+}
+
+.notification-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.notification-text {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.divider {
+    border-color: var(--text-light);
+    margin: 20px 0;
+}
+
+/* Sidebar styles */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: -250px;
+    background-color: var(--background-medium);
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+}
+
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: var(--text-light);
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: var(--accent-bright);
+}
+
+.menu-item {
+    margin-bottom: 10px;
+}
+
+#page-content {
+    transition: margin-left .3s;
+    padding: 16px;
+}
+
+#sidebar-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Responsive design */
+@media screen and (max-width: 1000px) {
+    .main-container, .collections-page {
+        width: 100%;
+        height: auto;
+    }
+
+    .collections-container, .products-section, .graph-container {
+        position: static;
+        width: 95%;
+        margin: 20px auto;
+    }
+
+    .page-title {
+        position: static;
+        text-align: center;
+        margin: 20px 0;
+    }
+}

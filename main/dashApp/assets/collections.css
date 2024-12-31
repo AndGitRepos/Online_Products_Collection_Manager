@@ -1,0 +1,149 @@
+.collections-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.page-title {
+    text-align: center;
+    color: white;
+    font-size: 25px;
+    font-weight: 700;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.collections-container {
+    width: 100%;
+    background: var(--background-dark);
+    border-radius: 5px;
+    border: 1px solid var(--accent-bright);
+    overflow-x: auto;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.collections-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 15px;
+}
+
+.collections-grid .collection-item {
+    min-width: 150px;
+    height: 70px;
+    background: var(--background-medium);
+    border-radius: 10px;
+    border: 1px solid var(--background-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 10px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.collections-grid .collection-item:hover {
+    background-color: var(--accent-bright);
+}
+
+/* Custom scrollbar styles */
+.collections-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.collections-container::-webkit-scrollbar-track {
+    background: var(--background-dark);
+}
+
+.collections-container::-webkit-scrollbar-thumb {
+    background-color: var(--accent-bright);
+    border-radius: 20px;
+    border: 3px solid var(--background-dark);
+}
+
+/* For Firefox */
+.collections-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-bright) var(--background-dark);
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    min-height: 0;
+}
+
+.products-section {
+    width: 30%;
+    background: var(--background-dark);
+    border-radius: 5px;
+    border: 1px solid var(--accent-bright);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.products-grid .product-item {
+    aspect-ratio: 1 / 1;
+    background: var(--background-medium);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    padding: 5px;
+}
+
+.graph-container {
+    width: 70%;
+    background: #D9D9D9;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .products-section,
+    .graph-container {
+        width: 100%;
+        height: auto;
+    }
+
+    .collections-container {
+        height: 100px;
+    }
+}
