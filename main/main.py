@@ -5,9 +5,13 @@ import pkg_resources
 from pathlib import Path
 
 # Get the path to the project root directory
+# Allows importing of modules
 project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
+"""
+Checks if any dependencies are missing and installs them
+"""
 def install_dependencies(requirements_file='main/requirements.txt'):
     required = set()
     with open(requirements_file, 'r') as f:
@@ -26,15 +30,15 @@ def install_dependencies(requirements_file='main/requirements.txt'):
     else:
         print("All dependencies are already installed.")
 
+""" - MAIN - """
 if __name__ == "__main__":
     requirements_file = Path('main/requirements.txt')
-    if not requirements_file.exists():
-        print("No requirements file found.")
-        sys.exit(1)
-
-    install_dependencies(str(requirements_file))
+    if requirements_file.exists():
+        install_dependencies(str(requirements_file))
+    else:
+        print(f"Requirements file not found: {requirements_file}")
 
     # Now that dependencies are installed, we can import and run the Dash app
-    from dashApp.app import create_app
+    from src.dashApp.app import create_app
     app = create_app()
     app.run_server(debug=True)

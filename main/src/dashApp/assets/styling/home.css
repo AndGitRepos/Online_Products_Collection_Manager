@@ -29,20 +29,13 @@
 .search-container {
     display: flex;
     align-items: center;
+    margin: auto;
+    width: 50%;
     gap: 10px;
-    position: absolute;
-    left: 350px;
-    top: 11px;
 }
 
 .analytics-section {
-    margin-top: 20px;
-}
-
-.section-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 10px;
+    margin-top: 40px;
 }
 
 .analytics-item {
@@ -63,6 +56,11 @@
     top: 0;
 }
 
+.collections-container{
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
 .collections-list {
     display: flex;
     flex-direction: column;
@@ -72,6 +70,8 @@
 .collection-item {
     background-color: var(--background-medium);
     border-radius: 15px;
+    padding: 12px 17px;
+    margin-bottom: 10px;
     overflow: hidden;
     transition: background-color 0.3s ease;
     cursor: pointer;
@@ -99,6 +99,7 @@
 
 .collection-total {
     font-size: 12px;
+    font-weight: 400;
     margin-top: 5px;
 }
 

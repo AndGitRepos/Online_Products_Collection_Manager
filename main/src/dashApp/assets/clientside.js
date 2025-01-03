@@ -56,21 +56,4 @@ window.dash_clientside.clientside = {
         }
         return window.dash_clientside.no_update;
     },
-
-    toggle_sidebar: function(n_clicks, current_state) {
-        const sidebar = document.querySelector('.sidebar');
-        const content = document.querySelector('.content');
-        
-        if (n_clicks && n_clicks > 0) {
-            if (current_state) {
-                sidebar.style.transform = 'translateX(-100%)';
-                content.classList.remove('sidebar-open');
-            } else {
-                sidebar.style.transform = 'translateX(0)';
-                content.classList.add('sidebar-open');
-            }
-            return !current_state;
-        }
-        return current_state;
-    }
 };

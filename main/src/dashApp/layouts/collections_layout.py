@@ -24,49 +24,56 @@ def create_collections_layout():
 
         # Main content
         html.Div([
-            # Products grid or product details (existing code)
+            # Products grid or product details
             html.Div([
                 html.Div(id='products-grid', className="products-grid"),
                 html.Div(id='product-details', style={'display': 'none'})
             ], className="products-section"),
 
-            # Graph container (moved up)
+            # Graph container
             html.Div([
                 dcc.Graph(id='product-graph'),
-                html.Div(id='wordcloud-container')
+                html.Div(id='wordcloud-container'),
+                
+                # Graph controls
+                html.Div([
+                    dcc.Dropdown(
+                        id='graph-type',
+                        options=[
+                            {'label': 'Bar Chart', 'value': 'bar'},
+                            {'label': 'Line Plot', 'value': 'line'},
+                            {'label': 'Word Cloud', 'value': 'wordcloud'},
+                            {'label': 'Spreadsheet View', 'value': 'spreadsheet'}
+                        ],
+                        value='bar',
+                        clearable=False
+                    ),
+                    dcc.Dropdown(
+                        id="filter-product-data", 
+                        options=[
+                            {'label': 'Price', 'value': 'Price'},
+                            {'label': 'Rating', 'value': 'Rating'},
+                            {'label': 'Reviews count', 'value': 'Reviews-Count'}
+                        ],
+                        value='Price',
+                        clearable=False),
+                    dcc.Dropdown(id='filter-product', multi=True),
+                ], className="graph-controls")
             ], className="graph-container"),
-
-            # Graph controls (moved below graph)
-            html.Div([
-                dcc.Dropdown(
-                    id='graph-type',
-                    options=[
-                        {'label': 'Bar Chart', 'value': 'bar'},
-                        {'label': 'Line Plot', 'value': 'line'},
-                        {'label': 'Word Cloud', 'value': 'wordcloud'},
-                        {'label': 'Spreadsheet View', 'value': 'spreadsheet'}
-                    ],
-                    value='bar',
-                    clearable=False
-                ),
-                dcc.Dropdown(id='filter-dropdown', multi=True),
-            ], className="graph-controls"),
-
         ], className="main-content"),
         
         # Notification container
         html.Div(id="notification-container", style={"position": "absolute", "top": "11px", "right": "20px", "zIndex": "1000"}),
 
         # Store for selected product
-        dcc.Store(id='selected-collection', data=None, storage_type='memory'),
-        dcc.Store(id='selected-product', data=None),
+        dcc.Store(id='selected-collection', data=None),
         dcc.Store(id='product-clicked', data=None),
         dcc.Store(id='view-state', data='grid'),
         dcc.Interval(id='notification-interval', interval=1000, n_intervals=0),
         dcc.Interval(id='initial-refresh', interval=1, max_intervals=1),
-        # Hidden collection display for consistency
-        html.Div(id='collection-display', style={"display": "none"}),
-        # Hidden elements for main page
+        # Hidden collection list to stop callback errors
+        html.Div(id='collections-list', style={"display": "none"}),
+        # Hidden elements to stop callback errors
         html.Div(id='search-progress', style={'display': 'none'}),
         html.Div(id='current-scrape-time', style={'display': 'none'}),
         html.Div(id='last-scrape-duration', style={'display': 'none'}),
