@@ -14,7 +14,7 @@ from src.callbacks.collections_callbacks import register_collections_callbacks
 """
 Checks if any dependencies are missing and installs them
 """
-def install_dependencies(requirements_file='src/requirements.txt'):
+def install_dependencies(requirements_file='requirements.txt'):
     required = set()
     with open(requirements_file, 'r') as f:
         for line in f:
@@ -33,7 +33,7 @@ def install_dependencies(requirements_file='src/requirements.txt'):
         print("All dependencies are already installed.")
 
 def create_app():
-    app = dash.Dash(__name__, 
+    app = dash.Dash(__name__, title='Online-Products-Collection-Manager',
                 external_stylesheets=[
                     '/src/assets/styling/common.css',
                     '/src/assets/styling/home.css',
@@ -57,7 +57,7 @@ def create_app():
 
 """ - MAIN - """
 if __name__ == "__main__":
-    requirements_file = Path('src/requirements.txt')
+    requirements_file = Path('requirements.txt')
     if requirements_file.exists():
         install_dependencies(str(requirements_file))
     else:
@@ -66,4 +66,5 @@ if __name__ == "__main__":
     from dash import dash, html, dcc
     
     app = create_app()
+    server = app.server
     app.run_server(debug=True)
