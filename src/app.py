@@ -14,7 +14,7 @@ from src.callbacks.collections_callbacks import register_collections_callbacks
 """
 Checks if any dependencies are missing and installs them
 """
-def install_dependencies(requirements_file='requirements.txt'):
+def install_dependencies(requirements_file='src/requirements.txt'):
     required = set()
     with open(requirements_file, 'r') as f:
         for line in f:
@@ -57,7 +57,7 @@ def create_app():
 
 """ - MAIN - """
 if __name__ == "__main__":
-    requirements_file = Path('requirements.txt')
+    requirements_file = Path('src/requirements.txt')
     if requirements_file.exists():
         install_dependencies(str(requirements_file))
     else:
