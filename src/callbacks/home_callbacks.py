@@ -5,7 +5,7 @@ import threading
 import asyncio
 import json
 from typing import List
-from src.dashApp.callbacks.common_funcs import load_collections, create_notification, verify_pathname_and_get_trigger
+from src.callbacks.common_funcs import load_collections, create_notification, verify_pathname_and_get_trigger
 from src.backend.WebScraper import WebScraper
 from src.backend.DataManager import DataManager
 from src.backend.Collection import Collection

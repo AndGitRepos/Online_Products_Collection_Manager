@@ -1,8 +1,8 @@
 import unittest
-from src.DataManager import DataManager
-from src.Collection import Collection
-from src.Product import Product
 import os
+from src.backend.DataManager import DataManager
+from src.backend.Collection import Collection
+from src.backend.Product import Product
 from typing import List
 
 class DataManagerTest(unittest.TestCase):

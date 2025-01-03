@@ -9,7 +9,7 @@ import re
 import random
 from collections import Counter
 from typing import List
-from src.dashApp.callbacks.common_funcs import load_collections, create_notification, verify_pathname_and_get_trigger
+from src.callbacks.common_funcs import load_collections, create_notification, verify_pathname_and_get_trigger
 from src.backend.DataManager import DataManager
 from src.backend.Collection import Collection
 

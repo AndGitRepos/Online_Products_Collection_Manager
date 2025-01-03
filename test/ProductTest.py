@@ -1,5 +1,5 @@
 import unittest
-from src.Product import Product
+from src.backend.Product import Product
 
 class ProductTest(unittest.TestCase):
     def setUp(self) -> None:

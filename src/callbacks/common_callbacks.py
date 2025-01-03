@@ -1,8 +1,8 @@
 from dash import Input, Output, State, ALL, callback_context, no_update, html, dcc
 from dash.exceptions import PreventUpdate
 import time
-from src.dashApp.layouts.home_layout import create_home_layout
-from src.dashApp.layouts.collections_layout import create_collections_layout
+from src.layouts.home_layout import create_home_layout
+from src.layouts.collections_layout import create_collections_layout
 
 """
 This method allows the main app file (app.py) to only need 
