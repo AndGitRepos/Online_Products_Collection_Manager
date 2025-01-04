@@ -33,8 +33,11 @@ def create_app():
     
     return app
 
-""" - MAIN - """
+# Create the app instance
+app = create_app()
+
+# Get the Flask server
+server = app.server
+
 if __name__ == "__main__":
-    app = create_app()
-    server = app.server
     app.run_server(debug=True)
