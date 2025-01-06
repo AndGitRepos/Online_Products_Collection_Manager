@@ -2,6 +2,7 @@ from src.backend.Collection import Collection
 from src.backend.Product import Product
 from typing import List, Dict, Any
 import json
+import io
 import csv
 import sys
 import os
@@ -205,3 +206,39 @@ class DataManager:
             dictionary["products"].append(product_dict)
         
         return dictionary
+    
+    @staticmethod
+    def convert_collection_to_csv_string(collection: Collection) -> str:
+        if not isinstance(collection, Collection):
+            raise TypeError("Collection must be a Collection")
+
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow(["productID", "name", "price", "url", "rating", "description", "reviews"])
+        
+        # Write product data
+        for product in collection.products:
+            writer.writerow([
+                product.productID,
+                product.name,
+                product.price,
+                product.url,
+                product.rating,
+                product.description,
+                json.dumps(product.reviews)  # Convert reviews list to JSON string
+            ])
+        
+        return output.getvalue()
+    
+    @staticmethod
+    def delete_collection(collection_name: str) -> None:
+        csv_path = os.path.join("CsvFolder", f"{collection_name}.csv")
+        json_path = os.path.join("JsonFolder", f"{collection_name}.json")
+        
+        if os.path.exists(csv_path):
+            os.remove(csv_path)
+        
+        if os.path.exists(json_path):
+            os.remove(json_path)

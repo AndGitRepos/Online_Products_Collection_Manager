@@ -139,3 +139,39 @@
     cursor: pointer;
     font-weight: bold;
 }
+
+.download-csv-button {
+    background-color: var(--accent-yellow);
+    color: var(--background-dark);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.download-csv-button:hover {
+    background-color: #ffc107;
+}
+
+.collection-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.delete-collection-button {
+    background-color: #dc3545;
+    color: var(--text-light);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.delete-collection-button:hover {
+    background-color: #c82333;
+}

@@ -50,6 +50,7 @@ def create_home_layout():
         dcc.Store(id='selected-collection', data=None),
         dcc.Store(id='notifications', data=[]),
         dcc.Download(id="download-json"),
+        dcc.Download(id="download-csv"),
         dcc.Interval(id='search-progress', interval=500, n_intervals=0, disabled=True),
         dcc.Interval(id='notification-interval', interval=500, n_intervals=0),
         dcc.Interval(id='initial-refresh', interval=1, max_intervals=1),

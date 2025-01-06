@@ -28,7 +28,7 @@ Also verifys if there is a trigger for the callee and if so returns it
 """
 def verify_pathname_and_get_trigger(callback_context, pathname, expected_pathname):
     if pathname != expected_pathname:
-        print(f"Not on {expected_pathname} page, preventing update")
+        #print(f"Not on {expected_pathname} page, preventing update")
         return None
     if not callback_context.triggered:
         print("No trigger, preventing update")

@@ -17,12 +17,6 @@ from src.backend.Collection import Collection
 collections : List[Collection] = []
 
 """
-Truncates (shortens) a string to a length passed in or default 25
-"""
-def truncate_name(name : str, max_length : int = 25) -> str:
-    return (name[:max_length] + '...') if len(name) > max_length else name
-
-"""
 Using regex to find all of the words within a given text,
 Initialising Counter with the gathered words and aggregating 
 the most commonly used words with their value depending on how 
@@ -85,7 +79,7 @@ def register_collections_callbacks(app) -> None:
                 products = selected_collection.products
                 return [
                     html.Div(
-                        truncate_name(product.name),
+                        product.name,
                         className="product-item",
                         id={'type': 'product-item', 'product-index': i},
                         title=product.name
@@ -186,7 +180,7 @@ def register_collections_callbacks(app) -> None:
                 print(f"Number of products: {len(products)}")
 
                 df = pd.DataFrame([
-                    {'Name': truncate_name(product.name, 20), 'Price': product.price, 'Rating': product.rating, 'Reviews-Count': len(product.reviews)}
+                    {'Name': product.name, 'Price': product.price, 'Rating': product.rating, 'Reviews-Count': len(product.reviews)}
                     for product in products
                 ])
 
@@ -231,6 +225,11 @@ def register_collections_callbacks(app) -> None:
                     fig.update_layout(title=f'Spreadsheet View: {selected_collection.name}')
 
                 fig.update_layout(
+                    xaxis = {
+                    'tickmode': 'array',
+                    'tickvals': list(range(len(products))),
+                    'ticktext': df['Name'].str.slice(0, 10).tolist(),
+                    },
                     plot_bgcolor='rgba(0,0,0,0)',
                     paper_bgcolor='rgba(0,0,0,0)',
                     font_color='#EEEEEE'

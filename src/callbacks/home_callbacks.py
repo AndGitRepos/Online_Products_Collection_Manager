@@ -14,8 +14,8 @@ from src.backend.Collection import Collection
 collections : List[Collection] = []
 search_result : Collection = None
 is_searching : bool = False
-search_start_time : float = None
-last_scrape_duration : float = None
+search_start_time : float = 0.0
+last_scrape_duration : float = 0.0
 
 """
 This method should be called by a seperate thread.
@@ -50,7 +50,13 @@ def create_collection_item(name : str, total_products : int, index : int):
         html.Div([
             html.H5("Products:"),
             html.Div(id={"type": "collection-products", "index": index}),
-            html.Button("Export Collection", className="export-button", id={"type": "export-collection", "index": index})
+            html.Div([
+                html.Div([
+                    html.Button("Export Collection", className="export-button", id={"type": "export-collection", "index": index}),
+                    html.Button("Download CSV", className="download-csv-button", id={"type": "download-csv", "index": index}),
+                ]),
+                html.Button("Delete Collection", className="delete-collection-button", id={"type": "delete-collection", "index": index})
+            ], className="collection-actions"),
         ], id={"type": "collection-collapse", "index": index}, style={"display": "none"}),
     ], className="collection-item", id={"type": "collection-item", "index": index})
 
@@ -114,11 +120,14 @@ def register_home_callbacks(app) -> None:
         Output('current-scrape-products', 'children'),
         Input('url', 'pathname'),
         Input('initial-refresh', 'n_intervals'),
+        Input('search-progress', 'n_intervals'),
+        Input('collections-list', 'children'),
         prevent_initial_call=True
     )
-    def handle_analytics_update(pathname, refresh_interval):
+    def handle_analytics_update(pathname, refresh_interval, search_interval, collections_children):
+        global collections
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         # Initialize outputs
@@ -137,7 +146,7 @@ def register_home_callbacks(app) -> None:
                     f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
                 ]
             elif search_result:
-                collections.append(search_result)
+                collections = load_collections()
                 outputs = [
                     True,
                     create_notification("Search completed. New collection added."),
@@ -146,11 +155,11 @@ def register_home_callbacks(app) -> None:
                     f"Total Collections: {len(collections)}",
                     f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
                 ]
-        elif trigger == "initial-refresh":
+        elif trigger == "initial-refresh" or trigger == 'collections-list':
             outputs = [
                 True,
                 create_notification("Collections refreshed"),
-                f"Current scrape time elapsed: 0 seconds",
+                f"Current scrape time elapsed: {format_time(last_scrape_duration)} seconds",
                 f"Last scrape duration: {format_time(last_scrape_duration)} seconds",
                 f"Total Collections: {len(collections)}",
                 f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
@@ -169,11 +178,18 @@ def register_home_callbacks(app) -> None:
         Input('url', 'pathname'),
         Input('refresh-button', 'n_clicks'),
         Input('initial-refresh', 'n_intervals'),
+        Input('search-progress', 'disabled'),
         prevent_initial_call=True
     )
-    def update_collections_grid(pathname, refresh_clicks, refresh_interval):
+    def update_collections_grid(pathname, refresh_clicks, refresh_interval, search_disabled):
         global collections
-        if pathname != '/':
+        trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/')
+        if trigger is None:
+            raise PreventUpdate
+        
+        if trigger == 'search-progress' and is_searching:
+            raise PreventUpdate
+        elif trigger == 'search-progress' and not search_disabled:
             raise PreventUpdate
 
         collections = load_collections()
@@ -237,5 +253,60 @@ def register_home_callbacks(app) -> None:
             collection = collections[button_index]
             collection_dict = DataManager.convert_collection_to_dictionary(collection)
             return dict(content=json.dumps(collection_dict, indent=2), filename=f"{collection.name}.json")
+        
+        raise PreventUpdate
+    
+    @app.callback(
+        Output("download-csv", "data"),
+        Input({"type": "download-csv", "index": ALL}, "n_clicks"),
+        State({"type": "download-csv", "index": ALL}, "id"),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def download_csv(n_clicks, ids, pathname):
+        trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/')
+        if trigger is None:
+            raise PreventUpdate
+        
+        button_id = trigger
+        button_index = json.loads(button_id)['index']
+        
+        # Check if the button was actually clicked
+        if n_clicks[button_index] is None or n_clicks[button_index] == 0:
+            raise PreventUpdate
+        
+        if button_index < len(collections):
+            collection = collections[button_index]
+            csv_string = DataManager.convert_collection_to_csv_string(collection)
+            return dict(content=csv_string, filename=f"{collection.name}.csv")
+        
+        raise PreventUpdate
+    
+    @app.callback(
+        Output('collections-list', 'children', allow_duplicate=True),
+        Output('notification-container', 'children', allow_duplicate=True),
+        Input({"type": "delete-collection", "index": ALL}, "n_clicks"),
+        State({"type": "delete-collection", "index": ALL}, "id"),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def delete_collection(n_clicks, ids, pathname):
+        global collections
+        trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/')
+        if trigger is None:
+            raise PreventUpdate
+        
+        button_id = trigger
+        button_index = json.loads(button_id)['index']
+        
+        # Check if the button was actually clicked
+        if n_clicks[button_index] is None or n_clicks[button_index] == 0:
+            raise PreventUpdate
+        
+        if button_index < len(collections):
+            collection_name = collections[button_index].name
+            DataManager.delete_collection(collection_name)
+            collections = load_collections()
+            return display_collections(collections), create_notification(f"Collection '{collection_name}' deleted.")
         
         raise PreventUpdate

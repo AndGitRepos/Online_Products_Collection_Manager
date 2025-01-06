@@ -5,11 +5,48 @@ from bs4 import BeautifulSoup
 import json
 import random
 import re
+import time
 import urllib.parse
 from typing import List, Dict, Any
 from src.backend.Product import Product
 from src.backend.Collection import Collection
 
+"""
+A class to dynamically adjust the rate of requests based on server responses.
+It helps in avoiding rate limiting by increasing or decreasing the request rate as needed.
+"""
+class AdaptiveRateLimiter:
+    def __init__(self, initial_rate=1, max_rate=10, min_delay=1.0, max_delay=2.0):
+        self.rate = initial_rate
+        self.max_rate = max_rate
+        self.min_delay = min_delay
+        self.max_delay = max_delay
+        self.last_request_time = 0
+    """
+    Ensures that requests are not made too quickly by waiting if necessary.
+    """
+    async def wait(self):
+        current_time = time.time()
+        time_since_last_request = current_time - self.last_request_time
+        delay = max(1 / self.rate - time_since_last_request, 0)
+        delay += random.uniform(self.min_delay, self.max_delay)
+        if delay > 0:
+            await asyncio.sleep(delay)
+        self.last_request_time = time.time()
+    """
+    Increases the request rate after successful requests.
+    """
+    def increase_rate(self):
+        self.rate = min(self.rate * 1.1, self.max_rate)
+    """
+    Decreases the request rate if rate limiting is detected.
+    """
+    def decrease_rate(self):
+        self.rate = max(self.rate * 0.9, 1)
+"""
+A utility class for scraping product information from the Argos website.
+It includes methods for searching products, parsing product pages, and fetching reviews.
+"""
 class WebScraper:
     USER_AGENTS: List[str] = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
@@ -21,11 +58,19 @@ class WebScraper:
         "Mozilla/5.0 (Android 11; Mobile; rv:68.0) Gecko/68.0 Firefox/89.0",
         "Mozilla/5.0 (Android 11; Mobile; LG-M255; rv:89.0) Gecko/89.0 Firefox/89.0"
     ]
-    MIN_SLEEP_TIME: int = 1.0
-    MAX_SLEEP_TIME: int = 3.0
+    MIN_SLEEP_TIME: float = 0.45
+    MAX_SLEEP_TIME: float = 1.1
     MAX_CONCURRENT_REQUESTS: int = 5
+    MAX_NUMBER_OF_REVIEWS: int = 500
+    MAX_NUMBER_OF_PRODUCTS: int = 500
     BASE_URL: str = "https://www.argos.co.uk"
     ROBOTS_TXT_CONTENT: str = None
+    rate_limiter: AdaptiveRateLimiter = AdaptiveRateLimiter(
+        initial_rate=1, 
+        max_rate=10, 
+        min_delay=MIN_SLEEP_TIME, 
+        max_delay=MAX_SLEEP_TIME
+    )
 
     def __init__(self):
         raise TypeError("This is a utility class and cannot be instantiated")
@@ -55,7 +100,9 @@ class WebScraper:
             "Cache-Control": "max-age=0",
         }
 
-    
+    """
+    Retrieves the robots.txt file from the target website.
+    """
     @staticmethod
     async def fetch_robots_txt(client: RetryClient) -> None:
         headers = WebScraper.get_headers()
@@ -72,91 +119,66 @@ class WebScraper:
             WebScraper.ROBOTS_TXT_CONTENT = ""
 
     """
-    This method will check the robots.txt file of the base website and
-    verify that the path we want to scrape is allowed
+    Verifies if the given paths are allowed to be scraped according to robots.txt.
     """
     @staticmethod
-    async def check_robots_txt(client: RetryClient, path: str) -> bool:
+    async def check_paths_allowed(client: RetryClient, paths: List[str]) -> bool:
         if WebScraper.ROBOTS_TXT_CONTENT is None:
             await WebScraper.fetch_robots_txt(client)
 
         lines = WebScraper.ROBOTS_TXT_CONTENT.splitlines()
-        for line in lines:
-            if line.lower().startswith("disallow:"):
-                disallowedPath = line.split(":", 1)[1].strip()
-                if path.startswith(disallowedPath):
-                    print(f"Access to {path} is disallowed by robots.txt")
-                    return False
-        print(f"Access to {path} is allowed by robots.txt")
+        for path in paths:
+            for line in lines:
+                if line.lower().startswith("disallow:"):
+                    disallowedPath = line.split(":", 1)[1].strip()
+                    if path.startswith(disallowedPath):
+                        print(f"Access to {path} is disallowed by robots.txt")
+                        return False
         return True
-    
     """
-    Given a page URL, this method will extract the large JSON structure that it stored within a script tag
-    """
-    @staticmethod
-    async def extract_script_json_data(
-        client: RetryClient, 
-        pageUrl: str, 
-        referer : str, 
-        jsonName : str
-    ) -> Dict[str, Any]:
-        headers = WebScraper.get_headers()
-        headers["Referer"] = referer
-        await asyncio.sleep(random.uniform(WebScraper.MIN_SLEEP_TIME, WebScraper.MAX_SLEEP_TIME))
-        async with client.get(pageUrl, headers=headers) as response:
-            if response.status == 200:
-                text = await response.text()
-                soup = BeautifulSoup(text, 'html.parser')
-                script_tag = soup.find('script', string=lambda text: text and jsonName in text)
-                if script_tag:
-                    start_index = script_tag.string.find(jsonName) + len(jsonName)
-                    end_index = script_tag.string.rfind('}') + 1
-                    json_text = script_tag.string[start_index:end_index].replace('undefined', 'null')
-                    try:
-                        return json.loads(json_text)
-                    except json.JSONDecodeError as e:
-                        print(f"Error decoding JSON: {e}")
-                        return None
-                else:
-                    print("Failed to find {jsonName} script tag")
-                    return None
-            else:
-                print(f"Failed to retrieve data from {pageUrl}. Status: {response.status}")
-                print(f"Headers user-agent: {headers['User-Agent']}")
-                return None
-            
+    Creates a RetryClient with specific retry options for handling failed requests.
+    """  
     @staticmethod
     def create_retry_client(session):
         retry_options = ExponentialRetry(
-            attempts=5,
-            start_timeout=1,
+            attempts=3,
+            start_timeout=0.8,
             max_timeout=60,
             factor=2,
             statuses={403, 429, 500, 502, 503, 504}
         )
         return RetryClient(client_session=session, retry_options=retry_options)
+    """
+    Implements an exponential backoff strategy for rate limiting.
+    """
+    @staticmethod
+    async def handle_rate_limit(attempt):
+        wait_time = min((2 ** attempt) + random.uniform(0, 1), 60)  # Cap at 60 seconds
+        print(f"Rate limited. Waiting for {wait_time:.2f} seconds before retry.")
+        await asyncio.sleep(wait_time)
 
     """
-    Given the name of a product that we want to collect data on this method will 
-    search for the product and extract the URLs for each product page, it will then 
-    extract the data of each product, and collect each product into a single collection
-    
-    
+    Main method to search for products and collect their data.
+    It orchestrates the entire scraping process for a given product search term.
     """
     @staticmethod
     async def search_for_products(productName: str) -> Collection:
         async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar()) as session:
             retryClient : RetryClient = WebScraper.create_retry_client(session)
             
-            # Check if search is allowed by robots.txt
-            searchPath : str = f"/search/{productName}"
-            if not await WebScraper.check_robots_txt(retryClient, searchPath):
-                print("Searching is not allowed according to robots.txt. Aborting.")
+            # Check if all required paths are allowed by robots.txt
+            paths_to_check = [
+                "/finder-api/product",
+                "/product/",
+                "/product-api/bazaar-voice-reviews/partNumber/"
+            ]
+            if not await WebScraper.check_paths_allowed(retryClient, paths_to_check):
+                print("One or more required paths are not allowed by robots.txt. Aborting.")
                 return None
 
             # Search for productName and gather all pages results
             searchResultsData: Dict[str, Any] = await WebScraper.fetch_all_search_results(
-                retryClient, searchPath, productName
+                retryClient, productName
             )
             if not searchResultsData:
                 print("No search results found")
@@ -164,11 +186,8 @@ class WebScraper:
             
             # From the search results construct each products page URL 
             # and save the total number of reviews each product has
-            numOfResults : int = searchResultsData["redux"]["product"]["numberOfResults"]
-            productPageUrlsAndNumOfReviews: List[tuple] = WebScraper.extract_product_urls_and_num_of_reviews(
-                searchResultsData["redux"]["product"]["products"], 
-                productName, 
-                numOfResults
+            productData: List[Dict[str, Any]] = WebScraper.extract_product_data_from_search(
+                searchResultsData["data"]["response"]["data"]
             )
 
             # Extract product data from each page constructed, resulting in a list of Products collected
@@ -177,12 +196,13 @@ class WebScraper:
             tasks = [
                 WebScraper.parse_product_page(
                     retryClient, 
-                    productUrlAndNumOfReviews[0], 
-                    productUrlAndNumOfReviews[1], 
+                    product["url"], 
+                    product["numOfReviews"], 
                     f"https://www.argos.co.uk/search/{productName}/", 
-                    semaphore
+                    semaphore,
+                    product
                 ) 
-                for productUrlAndNumOfReviews in productPageUrlsAndNumOfReviews
+                for product in productData[:WebScraper.MAX_NUMBER_OF_PRODUCTS]
             ]
             extractedProductData = await asyncio.gather(*tasks)
             extractedProductData: List[Product] = [product for product in extractedProductData if product]
@@ -195,59 +215,66 @@ class WebScraper:
             return Collection(productName, extractedProductData)
 
     """
-    This method will fetch all search results for a given product name 
-    and combine the JSON data structures for each page then return the combined JSON structure
+    Retrieves all search result pages for a given product name.
     """
     @staticmethod
     async def fetch_all_search_results(
         retryClient: RetryClient, 
-        searchPath : str, 
         productName : str
     ) -> Dict[str, Any]:
-        # Constructing search URL for first page so that we can retrieve its JSON data 
-        # structure to gain information on the total number of search results pages
-        searchURL : str = f"{WebScraper.BASE_URL}{searchPath}/opt/page:1/?clickOrigin=searchbar:search:term:{productName}"
-        searchResultsData: Dict[str, Any] = await WebScraper.extract_script_json_data(
-            retryClient, searchURL, WebScraper.BASE_URL, "window.App="
-        )
-        if not searchResultsData:
-            return None
-        # Constructing the search URLs for every other page and 
-        # creating tasks to extract the JSON data structure from each of them
-        numOfPages: int = searchResultsData["redux"]["product"]["meta"]["totalPages"]
-        tasks = []
-        for page in range(2, min(7, numOfPages + 1)):
-            searchURL : str = f"{WebScraper.BASE_URL}{searchPath}/opt/page:{page}/"
-            tasks.append(WebScraper.extract_script_json_data(retryClient, searchURL, WebScraper.BASE_URL, "window.App="))
+        base_url = f"{WebScraper.BASE_URL}/finder-api/product"
+        all_results = []
+        current_page = 1
+        total_pages = 1
 
-        # Combining the JSON data structures into one
-        results = await asyncio.gather(*tasks)
-        for result in results:
-            if result:
-                searchResultsData["redux"]["product"]["products"].extend(result["redux"]["product"]["products"])
-        return searchResultsData
+        async def fetch_page(page):
+            url = f"{base_url};isSearch=true;searchTerm={productName};queryParams={{\"page\":\"{page}\"}};payloadPath=/search/{productName}?returnMeta=true"
+            headers = WebScraper.get_headers()
+            
+            await WebScraper.rate_limiter.wait()
+            
+            async with retryClient.get(url, headers=headers) as response:
+                if response.status == 200:
+                    WebScraper.rate_limiter.increase_rate()
+                    data = await response.json()
+                    return data["data"]["response"]["data"], data["data"]["response"]["meta"]["totalPages"]
+                elif response.status == 429:
+                    WebScraper.rate_limiter.decrease_rate()
+                    await WebScraper.exponential_backoff(page)
+                    return None, None
+                else:
+                    print(f"Failed to retrieve search results for page {page}. Status: {response.status}")
+                    return None, None
+
+        while current_page <= total_pages:
+            results, pages = await fetch_page(current_page)
+            if results:
+                all_results.extend(results)
+                total_pages = pages
+                current_page += 1
+            else:
+                break
+
+        return {"data": {"response": {"meta": {"totalData": len(all_results)}, "data": all_results}}}
 
     """
-    From the JSON data structure retrieved by a search, it extracts the data needed to construct the product pages URLs
-    and extracts the total number of reviews for each product
+    Extracts relevant product data from the search results.
     """
     @staticmethod
-    def extract_product_urls_and_num_of_reviews(
-        searchResultsProductsData: List[Dict[str, Any]], 
-        productName : str, 
-        numberOfResults : int
-    ) -> List[str]:
-        extractedProductUrlsAndNumOfReviews : List[tuple] = []
-        for i, product in enumerate(searchResultsProductsData):
-            productID: str = product["id"]
-            productUrl: str = (f"{WebScraper.BASE_URL}/product/{productID}"
-                               f"?clickSR=slp:term:{productName}:{i + 1}:{numberOfResults}:1")
-            numOfReviews: int = product["attributes"]["reviewsCount"]
-            extractedProductUrlsAndNumOfReviews.append((productUrl, numOfReviews))
-        return extractedProductUrlsAndNumOfReviews
+    def extract_product_data_from_search(
+        searchResultsProductsData: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        return [{
+            "id": product["id"],
+            "url": f"{WebScraper.BASE_URL}/product/{product['id']}",
+            "numOfReviews": product["attributes"]["reviewsCount"],
+            "name": product["attributes"]["name"],
+            "price": product["attributes"]["price"],
+            "rating": product["attributes"]["avgRating"]
+        } for product in searchResultsProductsData]
 
     """
-    Parses a given product page, extracting data to instantiate a Product object
+    Extracts detailed information from a single product page.
     """
     @staticmethod
     async def parse_product_page(
@@ -255,43 +282,54 @@ class WebScraper:
         productUrl: str, 
         numOfReviews : int, 
         referer : str, 
-        semaphore: asyncio.Semaphore
+        semaphore: asyncio.Semaphore,
+        productData: Dict[str, Any]
     ) -> Product:
         async with semaphore:
-            # Check if product page access is allowed by robots.txt
-            productPath = urllib.parse.urlparse(productUrl).path
-            if not await WebScraper.check_robots_txt(client, productPath):
-                print(f"Access to {productUrl} is not allowed according to robots.txt. Skipping.")
-                return None
-            # Extract the JSON data structure containing the product data
-            await asyncio.sleep(random.uniform(WebScraper.MIN_SLEEP_TIME, WebScraper.MAX_SLEEP_TIME))
-            productData: Dict[str, Any] = await WebScraper.extract_script_json_data(
-                client, productUrl, referer, "window.__data="
-            )
-            if not productData:
-                return None
-            # Extract the product data needed within the JSON structure
-            productID: str = productData["productStore"]["data"]["attributes"]["partNumber"]
-            productName: str = productData["productStore"]["data"]["attributes"]["name"]
-            price: str = productData["productStore"]["data"]["prices"]["attributes"]["now"]
-            rating: str = productData["productStore"]["data"]["ratingSummary"]["attributes"]["avgRating"]
-            dirtyDescription: str = productData["productStore"]["data"]["attributes"]["description"]
-            # Removing HTML tags from the description
-            descriptionSoup : BeautifulSoup = BeautifulSoup(dirtyDescription, 'html.parser')
-            clean_description : str = descriptionSoup.get_text(separator=' ', strip=True)
+            await WebScraper.rate_limiter.wait()
+            # Extract the description from the HTML content
+            description = ""#await WebScraper.fetch_description(client, productUrl, referer)
+            
             # Retrieve all the reviews for the product
-            allReviews: List[str] = await WebScraper.get_reviews(client, productUrl, numOfReviews)
+            allReviews: List[str] = await WebScraper.get_reviews(
+                client, productData['id'], productUrl, min(WebScraper.MAX_NUMBER_OF_REVIEWS, numOfReviews)
+            )
 
-            print(f"Successfully retrieved data for product {productID}")
-            return Product(productID, productName, price, productUrl, rating, clean_description, allReviews)
-
+            print(f"Successfully retrieved data for product {productData['id']}")
+            return Product(
+                productData['id'], 
+                productData['name'], 
+                productData['price'], 
+                productUrl, 
+                productData['rating'], 
+                description, 
+                allReviews
+            )
+    
     """
-    Extracts the product number from the URL
+    Retrieves and extracts the product description from the product page.
     """
     @staticmethod
-    def get_product_number(url: str) -> str:
-        match = re.search(r'/product/(\d+)', url)
-        return match.group(1) if match else None
+    async def fetch_description(client: RetryClient, url: str, referer: str) -> str:
+        headers = WebScraper.get_headers()
+        headers["Referer"] = referer
+        
+        await WebScraper.rate_limiter.wait()
+        
+        async with client.get(url, headers=headers) as response:
+            if response.status == 200:
+                WebScraper.rate_limiter.increase_rate()
+                html_content = await response.text()
+                soup = BeautifulSoup(html_content, 'html.parser')
+                description_element = soup.select_one('div.product-description-content')
+                return description_element.get_text(strip=True) if description_element else "Description not found"
+            elif response.status == 429:
+                WebScraper.rate_limiter.decrease_rate()
+                await WebScraper.exponential_backoff(1)
+                return "Description not found (Rate limited)"
+            else:
+                print(f"Failed to retrieve HTML content. Status: {response.status}")
+                return "Description not found"
 
     """
     Retrieves the reviews for a product by sending a GET requests 
@@ -299,23 +337,11 @@ class WebScraper:
     You can only retrieve a maximum of 100 reviews at a time.
     """
     @staticmethod
-    async def get_reviews(client: RetryClient, productUrl: str, numOfReviews : int = 10) -> List[str]:
+    async def get_reviews(client: RetryClient, productId : str, productUrl: str, numOfReviews : int = 10) -> List[str]:
         if numOfReviews < 1:
             return []
-        productNumber : str = WebScraper.get_product_number(productUrl)
-        if not productNumber:
-            print("Could not extract product number from URL")
-            return None
 
-        apiUrl : str = f"{WebScraper.BASE_URL}/product-api/bazaar-voice-reviews/partNumber/{productNumber}"
-        
-        # Check if reviews API access is allowed by robots.txt
-        apiPath = urllib.parse.urlparse(apiUrl).path
-        if not await WebScraper.check_robots_txt(client, apiPath):
-            print(f"Access to reviews API is not allowed according to robots.txt. Skipping.")
-            return None
-
-        # Setting params and headers to mimic how the browser sent the GET request
+        apiUrl : str = f"{WebScraper.BASE_URL}/product-api/bazaar-voice-reviews/partNumber/{productId}"
         headers : Dict[str, str] = WebScraper.get_headers()
         headers.update({
             "Accept": "application/json",
@@ -328,28 +354,43 @@ class WebScraper:
         })
         
         allReviews : List[str] = []
-        for i in range(0, numOfReviews // 100 + 1):
-            offset : int = i * 100
+        offset : int = 0
+        
+        async def fetch_reviews(offset):
             params = {
                 "Limit": min(100, numOfReviews - offset),
                 "Offset": offset,
                 "Sort": "SubmissionTime:Desc",
                 "returnMeta": "true"
             }
-
-            await asyncio.sleep(random.uniform(WebScraper.MIN_SLEEP_TIME, WebScraper.MAX_SLEEP_TIME))
+            
+            await WebScraper.rate_limiter.wait()
+            
             async with client.get(apiUrl, params=params, headers=headers) as response:
                 if response.status == 200:
+                    WebScraper.rate_limiter.increase_rate()
                     try:
                         reviewsResponse = await response.json()
-                        for review in reviewsResponse["data"]["Results"]:
-                            allReviews.append(review["ReviewText"])
+                        return [review["ReviewText"] for review in reviewsResponse["data"]["Results"]]
                     except aiohttp.ContentTypeError:
                         print(f"Unexpected content type: {response.headers.get('Content-Type')}")
-                        text = await response.text()
-                        print(f"Response text: {text[:200]}...")
+                        return []
+                elif response.status == 429:
+                    WebScraper.rate_limiter.decrease_rate()
+                    await WebScraper.exponential_backoff(1)
+                    return []
                 else:
                     print(f"Failed to retrieve reviews. Status: {response.status}")
-                    print(f"Params: {params}")
-        
-        return allReviews
+                    return []
+
+        tasks = []
+        for i in range(0, numOfReviews, 100):
+            tasks.append(fetch_reviews(i))
+
+        results = await asyncio.gather(*tasks)
+        for result in results:
+            allReviews.extend(result)
+            if len(allReviews) >= numOfReviews:
+                break
+
+        return allReviews[:numOfReviews]
