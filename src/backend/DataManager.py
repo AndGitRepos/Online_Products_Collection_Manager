@@ -10,10 +10,11 @@ import ast
 
 csv.field_size_limit(sys.maxsize)
 
-# Might be best as a static class
-# Each Dict[str, Any] is a collection
-# To store a bunch of collections could use
-# Have it store data within spreadsheet file where each table is the collections name
+"""
+This class is used to perform all data operations.
+Loading and uploading of data structures.
+Conversions between classes and data structures and vice-versa.
+"""
 class DataManager:
     def __init__(self):
         raise TypeError("This is a utility class and cannot be instantiated")
@@ -62,11 +63,10 @@ class DataManager:
                         collections.append(Collection(file[:-4], products))
         return collections
 
-    # Maybe change to only save one collection per csv file
-    # And make it so that it saves all collections to one spreadsheet
-    # where each table within the spreadsheet is one collection
-    # If collection with same name exists, then come up with a way to have 
-    # past and present data to allow for data analysis
+    """
+    Saves a list of collections into a folder.
+    A single collection is converted to a single CSV file.
+    """
     @staticmethod
     def save_collections_to_csv_folder(csvFolderName : str, collections : List[Collection]) -> None:
         if not isinstance(csvFolderName, str):
@@ -182,7 +182,9 @@ class DataManager:
             )
             collection.addProduct(product)
         return collection
-    
+    """
+    Converts a collection into its dictionary format structure
+    """
     @staticmethod
     def convert_collection_to_dictionary(collection: Collection) -> Dict[str, Any]:
         if not isinstance(collection, Collection):
@@ -206,7 +208,10 @@ class DataManager:
             dictionary["products"].append(product_dict)
         
         return dictionary
-    
+    """
+    This method is used to convert a collection into CSV 
+    format but store this format within a String and return it
+    """
     @staticmethod
     def convert_collection_to_csv_string(collection: Collection) -> str:
         if not isinstance(collection, Collection):
@@ -232,6 +237,10 @@ class DataManager:
         
         return output.getvalue()
     
+    """
+    Deletes a given collections data that is stored within 
+    the CSV and JSON folders
+    """
     @staticmethod
     def delete_collection(collection_name: str) -> None:
         csv_path = os.path.join("CsvFolder", f"{collection_name}.csv")

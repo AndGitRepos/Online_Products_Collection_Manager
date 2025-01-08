@@ -58,11 +58,11 @@ class WebScraper:
         "Mozilla/5.0 (Android 11; Mobile; rv:68.0) Gecko/68.0 Firefox/89.0",
         "Mozilla/5.0 (Android 11; Mobile; LG-M255; rv:89.0) Gecko/89.0 Firefox/89.0"
     ]
-    MIN_SLEEP_TIME: float = 0.45
-    MAX_SLEEP_TIME: float = 1.1
+    MIN_SLEEP_TIME: float = 0.4
+    MAX_SLEEP_TIME: float = 0.8
     MAX_CONCURRENT_REQUESTS: int = 5
     MAX_NUMBER_OF_REVIEWS: int = 500
-    MAX_NUMBER_OF_PRODUCTS: int = 400
+    MAX_NUMBER_OF_PRODUCTS: int = 200 # Limiting size so that searches dont take too long for when you are reviewing/testing
     BASE_URL: str = "https://www.argos.co.uk"
     ROBOTS_TXT_CONTENT: str = None
     rate_limiter: AdaptiveRateLimiter = AdaptiveRateLimiter(

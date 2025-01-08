@@ -1,6 +1,12 @@
 from src.backend.Product import Product
 from typing import List
 
+"""
+This class is used to hold a list of products,
+giving a name to the list of products.
+A collection is the main class structure that is used
+to hold the data that is then converted to data structures (Ditionaries to JSON and CSV)
+"""
 class Collection:
     def __init__(self, name : str, products : List[Product]) -> None:
         self._name = name

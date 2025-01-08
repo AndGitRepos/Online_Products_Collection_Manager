@@ -2,6 +2,10 @@ from typing import List
 import re
 from urllib.parse import urlparse
 
+"""
+This class is the main class for contaning all 
+the crucial data that is scraped/collected of a product
+"""
 class Product:
     def __init__(self, productID : str, name : str, price : float, url : str, rating : float, description : str, reviews : List[str]) -> None:
         self._productID : str = productID

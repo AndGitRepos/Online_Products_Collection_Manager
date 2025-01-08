@@ -27,6 +27,7 @@ def create_app():
         html.Div(id='page-content')
     ])
 
+    # Registering all callbacks for each page
     register_common_callbacks(app)
     register_home_callbacks(app)
     register_collections_callbacks(app)
@@ -39,5 +40,6 @@ app = create_app()
 # Get the Flask server
 server = app.server
 
+""" - MAIN - """
 if __name__ == "__main__":
     app.run_server(debug=True)

@@ -7,6 +7,8 @@ This application will then scrape all of the given product within the Argos webs
 The collected data can then be viewed in a variety of visual ways.  
 It can also be exported as JSON, or downloaded as CSV.
 
+**On average the scraper takes 0.57 seconds per product scraped**
+
 ## Home page
 
 The home page is where you are able to search for products you want to scrape.  

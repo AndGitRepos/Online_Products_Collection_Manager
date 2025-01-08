@@ -230,6 +230,10 @@ def register_home_callbacks(app) -> None:
                 print(f"Error in toggle_collection: {str(e)}")
         return collapse_style, no_update, item_style
     
+    """
+    Exports a given collection into JSON format,
+    this JSON file is then downloaded
+    """
     @app.callback(
         Output("download-json", "data"),
         Input({"type": "export-collection", "index": ALL}, "n_clicks"),
@@ -256,6 +260,10 @@ def register_home_callbacks(app) -> None:
         
         raise PreventUpdate
     
+    """
+    Converts a given collection into CSV format,
+    this CSV file is then downloaded
+    """
     @app.callback(
         Output("download-csv", "data"),
         Input({"type": "download-csv", "index": ALL}, "n_clicks"),
@@ -282,6 +290,9 @@ def register_home_callbacks(app) -> None:
         
         raise PreventUpdate
     
+    """
+    Deletes a given collection from the memory store and the local CSV file store
+    """
     @app.callback(
         Output('collections-list', 'children', allow_duplicate=True),
         Output('notification-container', 'children', allow_duplicate=True),

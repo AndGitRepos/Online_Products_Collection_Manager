@@ -34,6 +34,9 @@ This method allows the main app file (app.py) to only need
 to call one method to register all callbacks for the collection page
 """
 def register_collections_callbacks(app) -> None:
+    """
+    Updating the grid of collections that are shown within the collection container
+    """
     @app.callback(
         Output('collections-grid', 'children', allow_duplicate=True),
         #Output('notification-container', 'children', allow_duplicate=True),
@@ -51,12 +54,15 @@ def register_collections_callbacks(app) -> None:
         collections = load_collections()
         collections_grid = [
             html.Div(collection.name, 
-                    className="collection-item",
+                    className="grid-item",
                     id={'type': 'collection-item', 'index': i})
             for i, collection in enumerate(collections)
         ]
         return collections_grid#, create_notification("Collections refreshed")
     
+    """
+    Updating the grid of products of a selected collection within the products container
+    """
     @app.callback(
         Output('products-grid', 'children'),
         Output('products-grid', 'style'),
@@ -81,7 +87,7 @@ def register_collections_callbacks(app) -> None:
                 return [
                     html.Div(
                         product.name,
-                        className="product-item",
+                        className="grid-item",
                         id={'type': 'product-item', 'product-index': i},
                         title=product.name
                     )
@@ -90,6 +96,12 @@ def register_collections_callbacks(app) -> None:
         
         return [], {'display': 'grid'}, {'display': 'none'}, None
     
+    
+    """
+    When the add product button is clicked,
+    this method creates a temporary product with temporary details that can be edited,
+    if the user wants to save the product that they added they will need to press the save buton
+    """
     @app.callback(
         Output('product-details', 'children', allow_duplicate=True),
         Output('product-details', 'style', allow_duplicate=True),
@@ -180,18 +192,18 @@ def register_collections_callbacks(app) -> None:
                             "Back to Products", 
                             id="back-to-products", 
                             n_clicks=0,
-                            className="back-button"
+                            className="button"
                         ),
                         html.Button(
                             "Save Changes",
                             id="save-product-changes",
                             n_clicks=0,
-                            className="save-button"
+                            className="button"
                         ),
                         html.Button(
                             "Delete Product", 
                             id="delete-product",
-                            className="delete-product-button",
+                            className="button",
                             n_clicks=0
                         )
                     ], className="product-actions"),
@@ -204,6 +216,10 @@ def register_collections_callbacks(app) -> None:
 
         raise PreventUpdate
     
+    """
+    When a grid product item is selected, this method will change the product container
+    to show the selected products details which can then be viewed and edited if they user wants to
+    """
     @app.callback(
         Output('products-grid', 'style', allow_duplicate=True),
         Output('product-details', 'style', allow_duplicate=True),
@@ -288,18 +304,18 @@ def register_collections_callbacks(app) -> None:
                                 "Back to Products", 
                                 id="back-to-products", 
                                 n_clicks=0,
-                                className="back-button"
+                                className="button"
                             ),
                             html.Button(
                                 "Save Changes",
                                 id="save-product-changes",
                                 n_clicks=0,
-                                className="save-button"
+                                className="button"
                             ),
                             html.Button(
                                 "Delete Product", 
                                 id="delete-product",
-                                className="delete-product-button",
+                                className="button",
                                 n_clicks=0
                             )
                         ], className="product-actions"),
@@ -309,6 +325,10 @@ def register_collections_callbacks(app) -> None:
         
         return no_update, no_update, no_update
     
+    """
+    When pressed this will save the current product details within the currently selected collection
+    and save this new collection within the CSV folder (overwriting the old CSV file)
+    """
     @app.callback(
         Output('products-grid', 'children', allow_duplicate=True),
         Output('products-grid', 'style', allow_duplicate=True),
@@ -375,6 +395,10 @@ def register_collections_callbacks(app) -> None:
         
         raise PreventUpdate
 
+    """
+    This method will disable the product details section from being shown within the products container
+    and allow the grid list of products to be shown again
+    """
     @app.callback(
         Output('products-grid', 'style', allow_duplicate=True),
         Output('product-details', 'style', allow_duplicate=True),
@@ -431,7 +455,6 @@ def register_collections_callbacks(app) -> None:
             return no_update, no_update, no_update, create_notification(f"An error occurred: {str(e)}")
 
         raise PreventUpdate
-
     
     @app.callback(
         Output('selected-collection', 'data'),
@@ -453,6 +476,10 @@ def register_collections_callbacks(app) -> None:
         
         return no_update
     
+    """
+    This method is called each time the user changes the data 
+    they want to be displayed within the graph container
+    """
     @app.callback(
         [Output('product-graph', 'figure'),
         Output('filter-product', 'options'),

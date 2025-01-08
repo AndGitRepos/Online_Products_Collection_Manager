@@ -7,6 +7,26 @@
     width: 100%;
 }
 
+/* Style for the grid items that are used for collections and products */
+.grid-item {
+    display: flex;
+    align-items: center;
+    background: var(--background-medium);
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.grid-item:hover {
+    background-color: var(--accent-bright);
+}
+
+/* Styles for collection container and the grid of collections within that container */
 .collections-container {
     background: var(--background-dark);
     width: 100%;
@@ -25,50 +45,14 @@
     gap: 15px;
 }
 
-.collections-grid .collection-item {
+.collections-grid .grid-item {
     min-width: 150px;
     height: 70px;
-    background: var(--background-medium);
-    border-radius: 10px;
-    border: 1px solid var(--background-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
     font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding: 10px;
     box-sizing: border-box;
-    flex-shrink: 0;
 }
 
-.collections-grid .collection-item:hover {
-    background-color: var(--accent-bright);
-}
-
-/* Custom scrollbar styles */
-.collections-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.collections-container::-webkit-scrollbar-track {
-    background: var(--background-dark);
-}
-
-.collections-container::-webkit-scrollbar-thumb {
-    background-color: var(--accent-bright);
-    border-radius: 20px;
-    border: 3px solid var(--background-dark);
-}
-
-/* For Firefox */
-.collections-container {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-bright) var(--background-dark);
-}
-
+/* Style for container of both the products section and the graph section */
 .main-content {
     display: flex;
     flex: 1;
@@ -76,6 +60,7 @@
     min-height: 0;
 }
 
+/* Style for the product section and the grid elements within it */
 .products-section {
     width: 20%;
     height: 75vh;
@@ -86,85 +71,25 @@
     padding: 10px; 
 }
 
-.add-product-button {
-    background-color: var(--accent-bright);
-    color: var(--background-dark);
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.add-product-button:hover {
-    background-color: #00c2cb;
-}
-
 .products-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
-.products-grid .product-item {
-    display: flex;
-    align-items: center;
-    background: var(--background-medium);
+.products-grid .grid-item {
     aspect-ratio: 1 / 1; 
-    border-radius: 10px;
-    color: white;
     font-size: 13px;
-    font-weight: 700;
-    text-align: center;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.products-grid .product-item:hover {
-    background-color: var(--accent-bright);
-}
-
+/* Styles for product details section */
 .product-details {
     background: var(--background-medium);
     border-radius: 10px;
     padding: 20px;
     color: white;
 }
-
-.product-details h3 {
-    margin-top: 0;
-}
-
-.product-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.delete-product-button {
-    background-color: #dc3545;
-    color: var(--text-light);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.delete-product-button:hover {
-    background-color: #c82333;
-}
-
-#back-to-products {
-    background-color: var(--accent-bright);
-    color: var(--background-dark);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
+/* Styles for all the form elements */
 .edit-form {
     display: flex;
     flex-direction: column;
@@ -217,6 +142,10 @@
     margin-bottom: 10px;
 }
 
+/*
+Styles for buttons that are shown in product 
+details section when a product is clicked
+*/
 .product-actions {
     display: flex;
     gap: 10px;
@@ -224,41 +153,27 @@
     justify-content: space-between;
 }
 
-.back-button {
-    background-color: var(--accent-bright);
-    color: var(--background-dark);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.back-button:hover {
-    background-color: #00c2cb;
-}
-
-.save-button {
+#save-product-changes {
     background-color: #28a745;
     color: var(--text-light);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
 }
 
-.save-button:hover {
+#save-product-changes:hover {
     background-color: #218838;
 }
 
-.product-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: space-between;
+#delete-product {
+    background-color: #dc3545;
+    color: var(--text-light);
 }
 
+#delete-product:hover {
+    background-color: #c82333;
+}
+
+/*
+Graph Styles
+*/
 .graph-container {
     width: 80%;
     background: var(--background-medium);
@@ -267,39 +182,26 @@
     flex-direction: column;
 }
 
+/* Styles for the dropdown menus below the graph*/
 .graph-controls {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
 }
-
-.graph-controls .Select {
-    width: 200px;
-}
-
-#wordcloud {
-    width: 100%;
-    height: 400px;
-    background-color: white;
-}
-
 .Select-control {
     background-color: rgb(25, 25, 25) !important;
+    width: 200px;
     color:white;
 }  
-
-.Select-input input {
-    color: white;
-}
-
-.Select-value-label {
-    color: white !important;
-}
-
 .Select-menu-outer {
     background-color: rgb(25, 25, 25);
     color: white;
-}   
+}  
+.Select-input input {
+    color: white;
+}
+.Select-value-label {
+    color: white !important;
+}
 
 @media screen and (max-width: 890px){
     .products-grid{
