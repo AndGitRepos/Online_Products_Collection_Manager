@@ -1,4 +1,4 @@
-from dash import Input, Output, State, ALL, callback_context, no_update, html
+from dash import Input, Output, State, ALL, callback_context, no_update, html, dcc
 from dash.exceptions import PreventUpdate
 import time
 import json
@@ -10,6 +10,7 @@ import random
 from collections import Counter
 from typing import List
 from src.callbacks.common_funcs import load_collections, create_notification, verify_pathname_and_get_trigger
+from src.backend.Product import Product
 from src.backend.DataManager import DataManager
 from src.backend.Collection import Collection
 
@@ -44,7 +45,7 @@ def register_collections_callbacks(app) -> None:
     def update_collections_grid(pathname, refresh_clicks, initial_refresh):
         global collections
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/collections')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         collections = load_collections()
@@ -69,7 +70,7 @@ def register_collections_callbacks(app) -> None:
     )
     def update_products_grid(selected_collection, n_clicks, ids, pathname):
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/collections')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         if 'index' in trigger:
@@ -90,6 +91,120 @@ def register_collections_callbacks(app) -> None:
         return [], {'display': 'grid'}, {'display': 'none'}, None
     
     @app.callback(
+        Output('product-details', 'children', allow_duplicate=True),
+        Output('product-details', 'style', allow_duplicate=True),
+        Output('products-grid', 'style', allow_duplicate=True),
+        Input('add-product-button', 'n_clicks'),
+        State('selected-collection', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def add_new_product(n_clicks, selected_collection_name, pathname):
+        trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/collections')
+        if trigger is None or n_clicks is None or n_clicks == 0:
+            raise PreventUpdate
+
+        try:
+            global collections
+            selected_collection = next((c for c in collections if c.name == selected_collection_name), None)
+            if selected_collection:
+                # Create a new product with temporary values
+                new_product = Product(
+                    productID=f"temp_{int(time.time())}",
+                    name="New Product",
+                    price=0.0,
+                    url="https://example.com",
+                    rating=0.0,
+                    description="Product description",
+                    reviews=[]
+                )
+                selected_collection.add_product(new_product)
+                
+                # Get the index of the new product
+                new_product_index = len(selected_collection.products) - 1
+
+                # Return the product details form for the new product
+                return [
+                    html.H3("Edit New Product Details"),
+                    html.Div([
+                        html.Label("Name:"),
+                        dcc.Input(
+                            id='edit-product-name',
+                            type='text',
+                            value=new_product.name,
+                            className='edit-input'
+                        ),
+                        html.Label("Price (£):"),
+                        dcc.Input(
+                            id='edit-product-price',
+                            type='number',
+                            value=new_product.price,
+                            step=0.01,
+                            className='edit-input'
+                        ),
+                        html.Label("URL:"),
+                        dcc.Input(
+                            id='edit-product-url',
+                            type='text',
+                            value=new_product.url,
+                            className='edit-input'
+                        ),
+                        html.Label("Rating (0-5):"),
+                        dcc.Input(
+                            id='edit-product-rating',
+                            type='number',
+                            value=new_product.rating,
+                            min=0,
+                            max=5,
+                            step=0.1,
+                            className='edit-input'
+                        ),
+                        html.Label("Description:"),
+                        dcc.Textarea(
+                            id='edit-product-description',
+                            value=new_product.description,
+                            className='edit-textarea'
+                        ),
+                        html.Label("Reviews:"),
+                        html.Div([
+                            dcc.Input(
+                                id={'type': 'edit-product-review', 'index': 0},
+                                type='text',
+                                placeholder='Add new review',
+                                className='edit-input review-input'
+                            )
+                        ], id='reviews-container', className='reviews-container'),
+                    ], className="edit-form"),
+                    html.Div([
+                        html.Button(
+                            "Back to Products", 
+                            id="back-to-products", 
+                            n_clicks=0,
+                            className="back-button"
+                        ),
+                        html.Button(
+                            "Save Changes",
+                            id="save-product-changes",
+                            n_clicks=0,
+                            className="save-button"
+                        ),
+                        html.Button(
+                            "Delete Product", 
+                            id="delete-product",
+                            className="delete-product-button",
+                            n_clicks=0
+                        )
+                    ], className="product-actions"),
+                    # Hidden store for product index
+                    dcc.Store(id='editing-product-index', data=new_product_index)
+                ], {'display': 'block'}, {'display': 'none'}
+
+        except Exception as e:
+            return no_update, no_update, no_update
+
+        raise PreventUpdate
+    
+    @app.callback(
         Output('products-grid', 'style', allow_duplicate=True),
         Output('product-details', 'style', allow_duplicate=True),
         Output('product-details', 'children'),
@@ -101,7 +216,7 @@ def register_collections_callbacks(app) -> None:
     )
     def show_product_details(n_clicks, ids, selected_collection_name, pathname):
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/collections')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         if 'product-index' in trigger:
@@ -111,14 +226,155 @@ def register_collections_callbacks(app) -> None:
                 if selected_collection and clicked_index < len(selected_collection.products):
                     product = selected_collection.products[clicked_index]
                     return {'display': 'none'}, {'display': 'block'}, [
-                        html.H3(product.name),
-                        html.P(f"Price: £{product.price}"),
-                        html.P(f"URL: {product.url}"),
-                        html.Button("Back to Products", id="back-to-products", n_clicks=0)
+                        html.H3("Edit Product Details"),
+                        html.Div([
+                            html.Label("Name:"),
+                            dcc.Input(
+                                id='edit-product-name',
+                                type='text',
+                                value=product.name,
+                                className='edit-input'
+                            ),
+                            html.Label("Price (£):"),
+                            dcc.Input(
+                                id='edit-product-price',
+                                type='number',
+                                value=product.price,
+                                step=0.01,
+                                className='edit-input'
+                            ),
+                            html.Label("URL:"),
+                            dcc.Input(
+                                id='edit-product-url',
+                                type='text',
+                                value=product.url,
+                                className='edit-input'
+                            ),
+                            html.Label("Rating (0-5):"),
+                            dcc.Input(
+                                id='edit-product-rating',
+                                type='number',
+                                value=product.rating,
+                                min=0,
+                                max=5,
+                                step=0.1,
+                                className='edit-input'
+                            ),
+                            html.Label("Description:"),
+                            dcc.Textarea(
+                                id='edit-product-description',
+                                value=product.description,
+                                className='edit-textarea'
+                            ),
+                            html.Label("Reviews:"),
+                            html.Div([
+                                dcc.Input(
+                                    id={'type': 'edit-product-review', 'index': i},
+                                    type='text',
+                                    value=review,
+                                    className='edit-input review-input'
+                                ) for i, review in enumerate(product.reviews)
+                            ] + [
+                                dcc.Input(
+                                    id={'type': 'edit-product-review', 'index': len(product.reviews)},
+                                    type='text',
+                                    placeholder='Add new review',
+                                    className='edit-input review-input'
+                                )
+                            ], id='reviews-container', className='reviews-container'),
+                        ], className="edit-form"),
+                        html.Div([
+                            html.Button(
+                                "Back to Products", 
+                                id="back-to-products", 
+                                n_clicks=0,
+                                className="back-button"
+                            ),
+                            html.Button(
+                                "Save Changes",
+                                id="save-product-changes",
+                                n_clicks=0,
+                                className="save-button"
+                            ),
+                            html.Button(
+                                "Delete Product", 
+                                id="delete-product",
+                                className="delete-product-button",
+                                n_clicks=0
+                            )
+                        ], className="product-actions"),
+                        # Hidden store for product index
+                        dcc.Store(id='editing-product-index', data=clicked_index)
                     ]
         
         return no_update, no_update, no_update
     
+    @app.callback(
+        Output('products-grid', 'children', allow_duplicate=True),
+        Output('products-grid', 'style', allow_duplicate=True),
+        Output('product-details', 'style', allow_duplicate=True),
+        Output('notification-container', 'children', allow_duplicate=True),
+        Input('save-product-changes', 'n_clicks'),
+        State('editing-product-index', 'data'),
+        State('edit-product-name', 'value'),
+        State('edit-product-price', 'value'),
+        State('edit-product-url', 'value'),
+        State('edit-product-rating', 'value'),
+        State('edit-product-description', 'value'),
+        State({'type': 'edit-product-review', 'index': ALL}, 'value'),
+        State('selected-collection', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def save_product_changes(n_clicks, product_index, name, price, url, rating, 
+                            description, reviews, selected_collection_name, pathname):
+        if n_clicks is None or n_clicks == 0:
+            raise PreventUpdate
+        
+        try:
+            global collections
+            selected_collection = next((c for c in collections if c.name == selected_collection_name), None)
+            if selected_collection and product_index < len(selected_collection.products):
+                product = selected_collection.products[product_index]
+                
+                # Update product attributes with new values
+                product.name = name
+                product.price = float(price)
+                product.url = url
+                product.rating = float(rating)
+                product.description = description
+                product.reviews = [rev for rev in reviews if rev is not None and rev.strip()]  # Remove empty reviews
+                
+                # If this was a new product, generate a proper productID
+                if product.productID.startswith('temp_'):
+                    product.productID = f"PROD_{int(time.time())}"
+                
+                # Save the modified collection
+                DataManager.save_collections_to_csv_folder("CsvFolder", [selected_collection])
+                
+                # Refresh collections list
+                collections = load_collections()
+                
+                # Update the products grid
+                products_grid = [
+                    html.Div(
+                        product.name,
+                        className="product-item",
+                        id={'type': 'product-item', 'product-index': i},
+                        title=product.name
+                    )
+                    for i, product in enumerate(selected_collection.products)
+                ]
+                
+                return products_grid, {'display': 'grid'}, {'display': 'none'}, create_notification("Product updated successfully")
+                
+        except ValueError as e:
+            return no_update, no_update, no_update, create_notification(f"Error: {str(e)}")
+        except Exception as e:
+            return no_update, no_update, no_update, create_notification(f"An error occurred: {str(e)}")
+        
+        raise PreventUpdate
+
     @app.callback(
         Output('products-grid', 'style', allow_duplicate=True),
         Output('product-details', 'style', allow_duplicate=True),
@@ -129,6 +385,53 @@ def register_collections_callbacks(app) -> None:
         if n_clicks > 0:
             return {'display': 'grid'}, {'display': 'none'}
         raise PreventUpdate
+
+    @app.callback(
+        Output('products-grid', 'children', allow_duplicate=True),
+        Output('products-grid', 'style', allow_duplicate=True),
+        Output('product-details', 'style', allow_duplicate=True),
+        Output('notification-container', 'children', allow_duplicate=True),
+        Input('delete-product', 'n_clicks'),
+        State('editing-product-index', 'data'),
+        State('selected-collection', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def delete_product(n_clicks, product_index, selected_collection_name, pathname):
+        if n_clicks is None or n_clicks == 0:
+            raise PreventUpdate
+
+        try:
+            global collections
+            selected_collection = next((c for c in collections if c.name == selected_collection_name), None)
+            if selected_collection and product_index < len(selected_collection.products):
+                # Remove the product
+                product = selected_collection.products[product_index]
+                selected_collection.remove_product(product)
+                
+                # Save the modified collection
+                DataManager.save_collections_to_csv_folder("CsvFolder", [selected_collection])
+                
+                # Refresh collections list
+                collections = load_collections()
+                
+                # Update the products grid
+                products_grid = [
+                    html.Div(
+                        product.name,
+                        className="product-item",
+                        id={'type': 'product-item', 'product-index': i},
+                        title=product.name
+                    )
+                    for i, product in enumerate(selected_collection.products)
+                ]
+                
+                return products_grid, {'display': 'grid'}, {'display': 'none'}, create_notification("Product deleted successfully")
+        except Exception as e:
+            return no_update, no_update, no_update, create_notification(f"An error occurred: {str(e)}")
+
+        raise PreventUpdate
+
     
     @app.callback(
         Output('selected-collection', 'data'),
@@ -138,7 +441,7 @@ def register_collections_callbacks(app) -> None:
     )
     def store_selected_collection(n_clicks, ids, pathname):
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/collections')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         if 'index' in trigger:
@@ -162,7 +465,7 @@ def register_collections_callbacks(app) -> None:
     )
     def update_graph(graph_type, filter_product_value, filter_product_data_value, selected_collection_data, pathname):
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/collections')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         selected_collection = None
@@ -174,70 +477,69 @@ def register_collections_callbacks(app) -> None:
             return px.bar(title="Select a collection to view product data"), [], []
         
         try:
-            if trigger == 'graph-type' or 'selected-collection' or trigger == "filter-product":
-                print(f"Graph type changed to {graph_type}")
-                products = selected_collection.products
-                print(f"Number of products: {len(products)}")
+            print(f"Graph type changed to {graph_type}")
+            products = selected_collection.products
+            print(f"Number of products: {len(products)}")
 
-                df = pd.DataFrame([
-                    {'Name': product.name, 'Price': product.price, 'Rating': product.rating, 'Reviews-Count': len(product.reviews)}
-                    for product in products
-                ])
+            df = pd.DataFrame([
+                {'Name': product.name, 'Price': product.price, 'Rating': product.rating, 'Reviews-Count': len(product.reviews)}
+                for product in products
+            ])
 
-                if filter_product_value:
-                    df = df[df['Name'].isin(filter_product_value)]
+            if filter_product_value:
+                df = df[df['Name'].isin(filter_product_value)]
 
-                print(f"Creating {graph_type} graph")
-                if graph_type == 'bar':
-                    fig = px.bar(df, x='Name', y=filter_product_data_value, title=f'Product {filter_product_data_value} in {selected_collection.name}')
-                elif graph_type == 'line':
-                    fig = px.line(df, x='Name', y=filter_product_data_value, title=f'Product {filter_product_data_value} in {selected_collection.name}')
-                elif graph_type == 'wordcloud':
-                    text = ' '.join([review for product in products for review in product.reviews])
-                    word_cloud_data = generate_word_cloud_data(text)
-                    x = [random.uniform(0, 1) for _ in word_cloud_data]
-                    y = [random.uniform(0, 1) for _ in word_cloud_data]
-                    sizes = [item['value'] * 50 for item in word_cloud_data]
-                    texts = [item['text'] for item in word_cloud_data]
-                    colors = [item['value'] for item in word_cloud_data]
-                    
-                    fig = go.Figure(data=[go.Scatter(
-                        x=x, y=y, mode='text',
-                        text=texts,
-                        textfont=dict(size=sizes),
-                        marker=dict(color=colors, colorscale='Viridis', showscale=True),
-                        hoverinfo='text'
-                    )])
-                    fig.update_layout(
-                        title=f'Review Word Cloud for {selected_collection.name}',
-                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
-                    )
-                elif graph_type == 'spreadsheet':
-                    fig = go.Figure(data=[go.Table(
-                        header=dict(values=list(df.columns),
-                                    fill_color='#FFB507',
-                                    align='left'),
-                        cells=dict(values=[df[col] for col in df.columns],
-                                fill_color='#393E46',
-                                align='left'))
-                    ])
-                    fig.update_layout(title=f'Spreadsheet View: {selected_collection.name}')
-
+            print(f"Creating {graph_type} graph")
+            if graph_type == 'bar':
+                fig = px.bar(df, x='Name', y=filter_product_data_value, title=f'Product {filter_product_data_value} in {selected_collection.name}')
+            elif graph_type == 'line':
+                fig = px.line(df, x='Name', y=filter_product_data_value, title=f'Product {filter_product_data_value} in {selected_collection.name}')
+            elif graph_type == 'wordcloud':
+                text = ' '.join([review for product in products for review in product.reviews])
+                word_cloud_data = generate_word_cloud_data(text)
+                x = [random.uniform(0, 1) for _ in word_cloud_data]
+                y = [random.uniform(0, 1) for _ in word_cloud_data]
+                sizes = [item['value'] * 50 for item in word_cloud_data]
+                texts = [item['text'] for item in word_cloud_data]
+                colors = [item['value'] for item in word_cloud_data]
+                
+                fig = go.Figure(data=[go.Scatter(
+                    x=x, y=y, mode='text',
+                    text=texts,
+                    textfont=dict(size=sizes),
+                    marker=dict(color=colors, colorscale='Viridis', showscale=True),
+                    hoverinfo='text'
+                )])
                 fig.update_layout(
-                    xaxis = {
-                    'tickmode': 'array',
-                    'tickvals': list(range(len(products))),
-                    'ticktext': df['Name'].str.slice(0, 10).tolist(),
-                    },
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    font_color='#EEEEEE'
+                    title=f'Review Word Cloud for {selected_collection.name}',
+                    xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                    yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
                 )
+            elif graph_type == 'spreadsheet':
+                fig = go.Figure(data=[go.Table(
+                    header=dict(values=list(df.columns),
+                                fill_color='#FFB507',
+                                align='left'),
+                    cells=dict(values=[df[col] for col in df.columns],
+                            fill_color='#393E46',
+                            align='left'))
+                ])
+                fig.update_layout(title=f'Spreadsheet View: {selected_collection.name}')
 
-                filter_options = [{'label': name, 'value': name} for name in df['Name']]
-                print("Returning updated graph and filter options")
-                return fig, filter_options, filter_product_value if filter_product_value else []
+            fig.update_layout(
+                xaxis = {
+                'tickmode': 'array',
+                'tickvals': list(range(len(products))),
+                'ticktext': df['Name'].str.slice(0, 10).tolist(),
+                },
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font_color='#EEEEEE'
+            )
+
+            filter_options = [{'label': name, 'value': name} for name in df['Name']]
+            print("Returning updated graph and filter options")
+            return fig, filter_options, filter_product_value if filter_product_value else []
         except Exception as e:
             print(f"Error in update_graph: {str(e)}")
             import traceback

@@ -58,13 +58,14 @@ class Product:
         elif len(url) == 0:
             raise ValueError("URL cannot be empty")
         
-        # URL pattern for validation
+        # URL pattern for validation - more permissive
         url_pattern = re.compile(
-            r'^(https?:\/\/)'  # http:// or https://
-            r'([\da-z\.-]+)'   # domain name
-            r'\.([a-z\.]{2,6})'  # dot + top level domain
-            r'([\/\w \.-]*)*\/?$'  # path
-        )
+            r'^https?://'  # http:// or https://
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'  # domain...
+            r'localhost|'  # localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+            r'(?::\d+)?'  # optional port
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
         
         # Validate URL format
         if not url_pattern.match(url):

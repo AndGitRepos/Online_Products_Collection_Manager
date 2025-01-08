@@ -91,7 +91,7 @@ def register_home_callbacks(app) -> None:
     )
     def handle_search(pathname, search_clicks, product_name):
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         # Initialize outputs
@@ -239,7 +239,7 @@ def register_home_callbacks(app) -> None:
     )
     def export_collection(n_clicks, ids, pathname):
         trigger = verify_pathname_and_get_trigger(callback_context, pathname, '/')
-        if trigger == None:
+        if trigger is None:
             raise PreventUpdate
         
         button_id = trigger

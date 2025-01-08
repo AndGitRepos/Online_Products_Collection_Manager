@@ -26,6 +26,10 @@ def create_collections_layout():
         html.Div([
             # Products grid or product details
             html.Div([
+                html.Div([
+                    html.H3("Products", style={"display": "inline-block"}),
+                    html.Button("Add Product", id="add-product-button", className="add-product-button")
+                ], style={"display": "flex", "justify-content": "space-between", "align-items": "center"}),
                 html.Div(id='products-grid', className="products-grid"),
                 html.Div(id='product-details', style={'display': 'none'})
             ], className="products-section"),
@@ -65,12 +69,18 @@ def create_collections_layout():
         # Notification container
         html.Div(id="notification-container", style={"position": "absolute", "top": "11px", "right": "20px", "zIndex": "1000"}),
 
-        # Store for selected product
+        # Hidden Stores and Intervals
         dcc.Store(id='selected-collection', data=None),
         dcc.Store(id='product-clicked', data=None),
         dcc.Store(id='view-state', data='grid'),
-        dcc.Interval(id='notification-interval', interval=1000, n_intervals=0),
+        dcc.Interval(id='notification-interval', interval=500, n_intervals=0),
         dcc.Interval(id='initial-refresh', interval=1, max_intervals=1),
+        
+        
+        
+        
+        
+        
         # Hidden collection list to stop callback errors
         html.Div(id='collections-list', style={"display": "none"}),
         # Hidden elements to stop callback errors

@@ -62,7 +62,7 @@ class WebScraper:
     MAX_SLEEP_TIME: float = 1.1
     MAX_CONCURRENT_REQUESTS: int = 5
     MAX_NUMBER_OF_REVIEWS: int = 500
-    MAX_NUMBER_OF_PRODUCTS: int = 500
+    MAX_NUMBER_OF_PRODUCTS: int = 400
     BASE_URL: str = "https://www.argos.co.uk"
     ROBOTS_TXT_CONTENT: str = None
     rate_limiter: AdaptiveRateLimiter = AdaptiveRateLimiter(
@@ -288,7 +288,7 @@ class WebScraper:
         async with semaphore:
             await WebScraper.rate_limiter.wait()
             # Extract the description from the HTML content
-            description = ""#await WebScraper.fetch_description(client, productUrl, referer)
+            description = await WebScraper.fetch_description(client, productUrl, referer)
             
             # Retrieve all the reviews for the product
             allReviews: List[str] = await WebScraper.get_reviews(
@@ -321,7 +321,7 @@ class WebScraper:
                 WebScraper.rate_limiter.increase_rate()
                 html_content = await response.text()
                 soup = BeautifulSoup(html_content, 'html.parser')
-                description_element = soup.select_one('div.product-description-content')
+                description_element = soup.select_one('div.product-description-content-text')
                 return description_element.get_text(strip=True) if description_element else "Description not found"
             elif response.status == 429:
                 WebScraper.rate_limiter.decrease_rate()
