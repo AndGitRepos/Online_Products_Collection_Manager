@@ -11,7 +11,7 @@ It can also be exported as JSON, or downloaded as CSV.
 
 ## Home page
 
-The home page is where you are able to search for products you want to scrape.  
+The home page is where you are able enter the name of any product you want to scrape.  
 On this page you are also able to view collected collections, export, download and delete them.
 
 ## Collections page

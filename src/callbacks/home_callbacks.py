@@ -156,6 +156,7 @@ def register_home_callbacks(app) -> None:
                     f"Current scrape products collected: {sum(len(c.products) for c in collections)} products"
                 ]
         elif trigger == "initial-refresh" or trigger == 'collections-list':
+            collections = load_collections()
             outputs = [
                 True,
                 create_notification("Collections refreshed"),

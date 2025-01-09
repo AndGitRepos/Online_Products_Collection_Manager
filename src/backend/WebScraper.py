@@ -4,7 +4,7 @@ from aiohttp_retry import RetryClient, ExponentialRetry
 from bs4 import BeautifulSoup
 import json
 import random
-import re
+import math
 import time
 import urllib.parse
 from typing import List, Dict, Any
@@ -58,10 +58,10 @@ class WebScraper:
         "Mozilla/5.0 (Android 11; Mobile; rv:68.0) Gecko/68.0 Firefox/89.0",
         "Mozilla/5.0 (Android 11; Mobile; LG-M255; rv:89.0) Gecko/89.0 Firefox/89.0"
     ]
-    MIN_SLEEP_TIME: float = 0.4
-    MAX_SLEEP_TIME: float = 0.8
-    MAX_CONCURRENT_REQUESTS: int = 5
-    MAX_NUMBER_OF_REVIEWS: int = 500
+    MIN_SLEEP_TIME: float = 0.3
+    MAX_SLEEP_TIME: float = 0.6
+    MAX_CONCURRENT_REQUESTS: int = 6
+    MAX_NUMBER_OF_REVIEWS: int = 400
     MAX_NUMBER_OF_PRODUCTS: int = 200 # Limiting size so that searches dont take too long for when you are reviewing/testing
     BASE_URL: str = "https://www.argos.co.uk"
     ROBOTS_TXT_CONTENT: str = None
@@ -84,7 +84,7 @@ class WebScraper:
         user_agent = random.choice(WebScraper.USER_AGENTS)
         return {
             "User-Agent": user_agent,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9",#image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Sec-Ch-Ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
@@ -202,7 +202,7 @@ class WebScraper:
                     semaphore,
                     product
                 ) 
-                for product in productData[:WebScraper.MAX_NUMBER_OF_PRODUCTS]
+                for product in productData
             ]
             extractedProductData = await asyncio.gather(*tasks)
             extractedProductData: List[Product] = [product for product in extractedProductData if product]
@@ -246,7 +246,7 @@ class WebScraper:
                     print(f"Failed to retrieve search results for page {page}. Status: {response.status}")
                     return None, None
 
-        while current_page <= total_pages:
+        while current_page <= min(total_pages, math.ceil(WebScraper.MAX_NUMBER_OF_PRODUCTS / 60)):
             results, pages = await fetch_page(current_page)
             if results:
                 all_results.extend(results)
@@ -255,7 +255,7 @@ class WebScraper:
             else:
                 break
 
-        return {"data": {"response": {"meta": {"totalData": len(all_results)}, "data": all_results}}}
+        return {"data": {"response": {"meta": {"totalData": WebScraper.MAX_NUMBER_OF_PRODUCTS}, "data": all_results[:WebScraper.MAX_NUMBER_OF_PRODUCTS]}}}
 
     """
     Extracts relevant product data from the search results.
