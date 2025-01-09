@@ -379,7 +379,7 @@ def register_collections_callbacks(app) -> None:
                 products_grid = [
                     html.Div(
                         product.name,
-                        className="product-item",
+                        className="grid-item",
                         id={'type': 'product-item', 'product-index': i},
                         title=product.name
                     )
@@ -443,7 +443,7 @@ def register_collections_callbacks(app) -> None:
                 products_grid = [
                     html.Div(
                         product.name,
-                        className="product-item",
+                        className="grid-item",
                         id={'type': 'product-item', 'product-index': i},
                         title=product.name
                     )
