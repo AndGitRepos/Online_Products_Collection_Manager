@@ -62,7 +62,7 @@ class WebScraper:
     MAX_SLEEP_TIME: float = 0.6
     MAX_CONCURRENT_REQUESTS: int = 6
     MAX_NUMBER_OF_REVIEWS: int = 400
-    MAX_NUMBER_OF_PRODUCTS: int = 200 # Limiting size so that searches dont take too long for when you are reviewing/testing
+    MAX_NUMBER_OF_PRODUCTS: int = 150 # Limiting size so that searches dont take too long for when you are reviewing/testing
     BASE_URL: str = "https://www.argos.co.uk"
     ROBOTS_TXT_CONTENT: str = None
     rate_limiter: AdaptiveRateLimiter = AdaptiveRateLimiter(

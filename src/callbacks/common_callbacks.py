@@ -65,9 +65,6 @@ def register_common_callbacks(app) -> None:
         prevent_initial_call=True
     )
     def handle_notifications(pathname, notification_interval, current_notifications):
-        if pathname != '/':
-            return no_update
-
         ctx = callback_context
         trigger_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else 'no_trigger'
 
