@@ -46,3 +46,7 @@ If ran succesfully the console with display the following text:
 `Dash is running on http://127.0.0.1:8050/`  
 On a web-browser navigate to the following page outputted (your localhost `http://127.0.0.1:8050/`).  
 That page will contain the running application.
+
+# Errors?
+
+If you are having problems with the webscraper when attempting to scrape for a collection try running `cd /Applications/Python\ 3.13/` followed by `./Install\ Certificates.command`
