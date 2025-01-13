@@ -39,7 +39,7 @@ def register_collections_callbacks(app) -> None:
     """
     @app.callback(
         Output('collections-grid', 'children', allow_duplicate=True),
-        #Output('notification-container', 'children', allow_duplicate=True),
+        Output('notification-container', 'children', allow_duplicate=True),
         Input('url', 'pathname'),
         Input('refresh-button', 'n_clicks'),
         Input('initial-refresh', 'n_intervals'),
@@ -58,7 +58,7 @@ def register_collections_callbacks(app) -> None:
                     id={'type': 'collection-item', 'index': i})
             for i, collection in enumerate(collections)
         ]
-        return collections_grid#, create_notification("Collections refreshed")
+        return collections_grid, create_notification("Collections refreshed")
     
     """
     Updating the grid of products of a selected collection within the products container
