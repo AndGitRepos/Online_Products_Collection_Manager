@@ -1,12 +1,10 @@
-import os, sys
+import os
+import sys
 import subprocess
-import pkg_resources
 from pathlib import Path
 
-"""
-Checks if any dependencies are missing and installs them
-"""
 def install_dependencies(requirements_file='requirements.txt'):
+    # Read required packages from requirements.txt
     required = set()
     with open(requirements_file, 'r') as f:
         for line in f:
@@ -14,8 +12,15 @@ def install_dependencies(requirements_file='requirements.txt'):
             if package and not package.startswith('#'):
                 required.add(package)
 
-    installed = {pkg.key for pkg in pkg_resources.working_set}
-    missing = required - installed
+    # Try to import each package to check if it's installed
+    missing = set()
+    for package in required:
+        # Remove version specifiers if present (e.g., "package>=1.0.0" -> "package")
+        package_name = package.split('==')[0].split('>=')[0].split('<=')[0].split('>')[0].split('<')[0]
+        try:
+            __import__(package_name)
+        except ImportError:
+            missing.add(package)
 
     if missing:
         python = sys.executable
