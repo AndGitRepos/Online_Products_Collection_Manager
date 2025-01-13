@@ -156,6 +156,13 @@ class WebScraper:
         wait_time = min((2 ** attempt) + random.uniform(0, 1), 60)  # Cap at 60 seconds
         print(f"Rate limited. Waiting for {wait_time:.2f} seconds before retry.")
         await asyncio.sleep(wait_time)
+        
+    @staticmethod
+    def create_ssl_context():
+        import ssl
+        ssl_context = ssl.create_default_context()
+        ssl_context.load_default_certs()
+        return ssl_context
 
     """
     Main method to search for products and collect their data.
@@ -163,7 +170,12 @@ class WebScraper:
     """
     @staticmethod
     async def search_for_products(productName: str) -> Collection:
-        async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar()) as session:
+        ssl_context = WebScraper.create_ssl_context()
+        connector = aiohttp.TCPConnector(ssl=ssl_context)
+        async with aiohttp.ClientSession(
+            cookie_jar=aiohttp.CookieJar(),
+            connector=connector
+        ) as session:
             retryClient : RetryClient = WebScraper.create_retry_client(session)
             
             # Check if all required paths are allowed by robots.txt
