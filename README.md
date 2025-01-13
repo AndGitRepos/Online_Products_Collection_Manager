@@ -36,11 +36,11 @@ To install the dependencies of the collection manager you can either run:
 `pip install -r requirements.txt`
 
 Or you can use the `install_dependencies.py` file by running:  
-`python -m src.install_dependencies`
+`python -m src.install_dependencies` or `python3 -m src.install_dependencies`
 
 ### Run the application
 To start the application run the following command:  
-`python -m src.app`
+`python -m src.app` or `python3 -m src.app`
 
 If ran succesfully the console with display the following text:  
 `Dash is running on http://127.0.0.1:8050/`  
